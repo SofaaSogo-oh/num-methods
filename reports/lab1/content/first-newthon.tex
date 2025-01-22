@@ -1,0 +1,42 @@
+\section{Решение}
+\subsection{\RomanNum{1} интерполяционная формула Ньютона}
+\subsubsection{Теоретический вывод}
+Задача такова: необходимо с помощью набора простых функций (можно назвать базисом), состоящим из функций
+\begin{align}
+	\{e_i\}	= \{1\} \cup \left\{\prod_{i=0}^k (x - x_i)\colon k=\overline{0,n}\right\}
+\end{align}
+Из равноудаленности точек, данные базисные функции можно записать кратко:
+\begin{align}
+	x^{[k]} = & \begin{cases}
+		            \prod_{i=0}^{k - 1} (x - i h), & k > 0 \\
+		            1,                             & k = 0
+	            \end{cases},\, k = \overline{0,n}                    \\
+	\{e_i\} = & \left\{ (x - x_0)^{[k]}\colon k = \overline{0,n} \right\}
+\end{align}
+
+Далее мы должны найти такую их линейную комбинацию, что в заданных равностоящих узлах. Этот полином принимает целевые значения:
+\begin{align}\label{eq:pf_eq}
+	P_n(x_i) = f(x_i) = y_i
+\end{align}
+Собственно, сам полином имеет вид:
+\begin{align}
+	P(x) = \sum_{k=0}^n a_k (x - x_0)^{[k]}
+\end{align}
+При последовательной подстановке точек $x_i$ в определение \cref{eq:pf_eq} можно найти искомые коэффициенты $a_k$:
+\begin{align}
+	 & x = x_i \Longrightarrow x - x_i = 0                                                                           \\
+	 & \forall i,j = \overline{0,n}\colon\, j \geq i \Longrightarrow \prod_{k=0}^j (x - x_k) = (x - x_0)^{[j+1]} = 0
+\end{align}
+Базис конечный --- перебрать все возможно.
+
+С другой стороны мы получаем:
+\begin{align}
+	x            = x_i                   \\
+	\forall i,j  = \overline{0,n}\colon\, j \leq i \Longrightarrow \prod_{k=0}^{j-1} (x - x_k)  = (x_i - x_0)^{[j]} =
+	(x_0 + i h - x_0)^{[j]} = (ih)^{[j]} \\
+	(ih)^{[j]} = \prod_{k=0}^{j-1} (ih - kh) = \prod_{k=0}^{j-1} h (i - k) = h^j \frac{i!}{(i-j)!}
+\end{align}
+
+\subsubsection{Формула для заданного примера}
+
+
