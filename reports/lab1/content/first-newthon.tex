@@ -18,25 +18,170 @@
 \begin{align}\label{eq:pf_eq}
 	P_n(x_i) = f(x_i) = y_i
 \end{align}
-Собственно, сам полином имеет вид:
+Шаблон полинома:
 \begin{align}
 	P(x) = \sum_{k=0}^n a_k (x - x_0)^{[k]}
 \end{align}
 При последовательной подстановке точек $x_i$ в определение \cref{eq:pf_eq} можно найти искомые коэффициенты $a_k$:
 \begin{align}
-	 & x = x_i \Longrightarrow x - x_i = 0                                                                           \\
-	 & \forall i,j = \overline{0,n}\colon\, j \geq i \Longrightarrow \prod_{k=0}^j (x - x_k) = (x - x_0)^{[j+1]} = 0
+	 & x = x_i \Longrightarrow x - x_i = 0                                                                            \\
+	 & \forall i,j = \overline{0,n}\colon\, j > i \Longrightarrow \prod_{k=0}^{j - 1} (x - x_k) = (x - x_0)^{[j]} = 0
 \end{align}
-Базис конечный --- перебрать все возможно.
-
-С другой стороны мы получаем:
+Аналогично:
 \begin{align}
 	x            = x_i                   \\
 	\forall i,j  = \overline{0,n}\colon\, j \leq i \Longrightarrow \prod_{k=0}^{j-1} (x - x_k)  = (x_i - x_0)^{[j]} =
 	(x_0 + i h - x_0)^{[j]} = (ih)^{[j]} \\
-	(ih)^{[j]} = \prod_{k=0}^{j-1} (ih - kh) = \prod_{k=0}^{j-1} h (i - k) = h^j \frac{i!}{(i-j)!}
+	(ih)^{[j]} = \prod_{k=0}^{j-1} (ih - kh) = \prod_{k=0}^{j-1} h (i - k) = h^j \frac{i!}{(i-j)!} = h^j \lambda_{ij}
 \end{align}
 
+Итак, формируются коэффициенты вида:
+\begin{align}
+	b_{ij} = \begin{cases}
+		         h^j \lambda_{ij}, & j \leq i \\
+		         0,                & j > i
+	         \end{cases} \\
+	\lambda_{ij} = \frac{i!}{(i-j)!} \label{eq:lambda_def}
+\end{align}
+
+В итоге получаем матричное уравнение:
+\begin{align}
+	\begin{pmatrix}
+		\frac{0!}{(0-0)!} & 0                 & \cdots & 0                 \\
+		\frac{1!}{(1-0)!} & \frac{1!}{(1-1)!} & \cdots & 0                 \\
+		\vdots            & \vdots            & \ddots & \vdots            \\
+		\frac{n!}{(n-0)!} & \frac{n!}{(n-1)!} & \cdots & \frac{n!}{(n-n)!} \\
+	\end{pmatrix}
+	\diag\{ h^k \colon k = \overline{0, n}\}
+	\begin{pmatrix}
+		a_0    \\
+		a_1    \\
+		\vdots \\
+		a_n    \\
+	\end{pmatrix} =
+	\begin{pmatrix}
+		y_0    \\
+		y_1    \\
+		\vdots \\
+		y_n    \\
+	\end{pmatrix}
+\end{align}
+
+Матрица получилась треугольная. Необходимо найти решение для \(a_k\). Для нахождения можно вычитать одну строку из другой, умножать на определенное число. Вычитание одной строки из другой (соседней) означает, что мы находим:
+\begin{align}
+	\Delta P(x_k) = P(x_k + h) - P(x_k) = P(x_{k + 1}) - P(x_k)
+\end{align}
+При том вычитаются и решения:
+\begin{align}
+	\Delta f(x_k) = f(x_k + h) - f(x_k) = f(x_{k + 1}) - f(x_k) = y_{k + 1} - y_{k}
+\end{align}
+
+Коэффициенты здесь таковы, что:
+\begin{align}
+	\begin{pmatrix}
+		1 & k     & k(k-1) & \cdots & k!     & 0      & \cdots & 0 \\
+		1 & (k+1) & (k+1)k & \cdots & (k+1)! & (k+1)! & \cdots & 0 \\
+	\end{pmatrix}
+\end{align}
+Вычитая строки:
+\begin{align}
+	\begin{pmatrix}
+		0 & 1 & 2k & \cdots & k!k & k! & \cdots & 0
+	\end{pmatrix}
+\end{align}
+В общем случае:
+\begin{multline}\label{eq:delta_base}
+	\lambda_{(k+1)t} - \lambda_{kt} = \frac{(k+1)!}{(k+1-t)!} - \frac{k!}{(k-t)!} = \frac{(k+1)!}{(k+1-t)!} - \frac{((k+1)-t)}{((k+1)-t)}\frac{k!}{(k-t)!} = \\
+	= \frac{(k+1)k!}{(k+1-t)!} - \frac{(k+1-t)k!}{(k+1-t)!} = \frac{k!(k+1-k-1+t)}{(k+1-t)!} = t \frac{k!}{(k + 1 - t)!} = \\
+	= t \frac{k!}{(k + 1 - t)!} = t \frac{k!}{(k-(t-1))!} = t \lambda_{k(t-1)}
+\end{multline}
+То есть, мы имеем преобразование следуюещго плана:
+\begin{align}
+	\delta\colon \lambda_{kt} \mapsto
+	\begin{cases}
+		t \lambda_{k(t-1)}, & t > 0 \\
+		0,                  & t=0
+	\end{cases}
+\end{align}
+Повторное применение преобразования:
+\begin{align}
+	\delta^2\lambda_{kt} = \delta \delta \lambda_{kt} = \delta t \lambda_{k(t-1)} = t \delta \lambda_{k(t-1)} = t(t-1)\lambda_{k(t-2)}
+\end{align}
+Следующее утверждение --- результат рассуждений:
+\begin{align}
+	\delta^m \lambda_{kt} = \frac{t!}{(t-m)!} \lambda_{k(t-m)}
+\end{align}
+\begin{proof}
+	Доказывается по индукции:
+	\begin{enumerate}
+		\item База доказана в \cref{eq:delta_base}.
+		\item Переход:
+		      \begin{multline}
+			      \delta^{m+1}\lambda_kt = \delta \delta^{m} \lambda_kt = \frac{t!}{(t-m)!}\delta \lambda_{k(t-m)} = \\
+			      = \frac{t!}{(t-m)!} (t-m) \lambda_{k(t-(m+1))} = \frac{t!}{(t-(m+1))!}\lambda_{k(t-(m+1))}
+		      \end{multline}
+	\end{enumerate}
+\end{proof}
+Из определения коэффициентов \cref{eq:lambda_def} видно, что:
+\begin{align}
+	\lambda_{k0} = \frac{k!}{k!} = 1
+\end{align}
+Значит:
+\begin{align}
+	\begin{pmatrix}
+		1 & k & k(k-1) & \cdots & k! & 0 & \cdots & 0
+	\end{pmatrix} \xmapsto{\delta^k}
+	\begin{pmatrix}
+		0 & 0 & 0 & \cdots & k! & \cdots & 0
+	\end{pmatrix}
+\end{align}
+Далее:
+\begin{align}
+	\begin{pmatrix}
+		1      & 0      & 0      & \cdots & 0      \\
+		0      & h      & 0      & \cdots & 0      \\
+		0      & 0      & 2 h^2  & \cdots & 0      \\
+		\vdots & \vdots & \vdots & \ddots & \vdots \\
+		0      & 0      & 0      & \cdots & n! h^n \\
+	\end{pmatrix}
+	\begin{pmatrix}
+		a_0    \\
+		a_1    \\
+		a_2    \\
+		\vdots \\
+		a_n    \\
+	\end{pmatrix} =
+	\begin{pmatrix}
+		\Delta^0 y_0 \\
+		\Delta^1 y_0 \\
+		\Delta^2 y_0 \\
+		\vdots       \\
+		\Delta^n y_0 \\
+	\end{pmatrix} \\
+	\begin{pmatrix}
+		a_0    \\
+		a_1    \\
+		a_2    \\
+		\vdots \\
+		a_n    \\
+	\end{pmatrix} =
+	\begin{pmatrix}
+		y_0                        \\
+		\frac{\Delta y_0}{h}       \\
+		\frac{\Delta^2 y_0}{2h^2}  \\
+		\vdots                     \\
+		\frac{\Delta^n y_0}{n!h^n} \\
+	\end{pmatrix}
+\end{align}
+Коэффициенты найдены. Формула принимает следующий вид:
+\begin{align}
+	P_n(x) = \sum_{k=0}^n \frac{\Delta^k y_0}{k!h^k} (x-x_0)^{[k]}
+\end{align}
+Возможна замена:
+\begin{align}
+	q = \frac{x-x_0}{h} \Longrightarrow \frac{x-x_k}{h} = \frac{x-x_0-kh}{h} = \frac{x-x_0}{h} - k = q - k \\
+	P_n(x) = \sum_{k=0}^n \frac{\Delta^k y_0}{k!}\prod_{m=0}^{k-1}(q-m)
+\end{align}
 \subsubsection{Формула для заданного примера}
 
 
