@@ -15,7 +15,7 @@
   (labels ((second-newthon.prod_ (prod_k sum_k qts_k)
              (if (null qts_k) sum_k
                  (let* ((prod_k1 (* prod_k p))
-                        (sum_k1 (+ (* prod_k (car qts_k))))
+                        (sum_k1 (+ sum_k (* prod_k (car qts_k))))
                         (qts_k1 (cdr qts_k)))
                    (second-newthon.prod_ prod_k1 sum_k1 qts_k1)))))
     (second-newthon.prod_ 1 0
@@ -23,6 +23,7 @@
                             #'abs
                             (reverse
                               (generate-derived-polynom-qsts n))))))
+
 
 (defun second-newthon.meta (nde f x x_n)
   (let ((n (nde-n nde))
@@ -35,9 +36,10 @@
                                      (/ (* (second-newthon.prod k p)
                                            (finite-subs 
                                              f (nde-i nde (- n k))
-                                             k nde))))))
+                                             k nde))
+                                        qts_k))))
                      (second-newthon_ k1 qts_k1 sum_k1)))))
-      (second-newthon_ 0 1 0))))
+      (second-newthon_ 1 1 0))))
 
 (defun second-newthon.end (nde f x)
   (second-newthon.meta nde f x (nde-end nde)))

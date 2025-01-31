@@ -8,6 +8,12 @@
                              :end 3.36d0
                              :n 5))
 
+(reverse (mapcar #'abs (generate-derived-polynom-qsts 1)))
+(second-newthon.prod 2 2)
+
+(first-newthon.x_0 *TARGET-NDE* 3.355)
+(second-newthon.x_n *TARGET-NDE* 3.355d0)
+(mapcar (curry #'nde-i *TARGET-NDE*) (iota (1+ (nde-n *target-nde*))))
 
 (defun main ()
   (let ((table (ascii-table:make-table *interpl-table-deriv* :header "Приближенное вычислкение производной"))
