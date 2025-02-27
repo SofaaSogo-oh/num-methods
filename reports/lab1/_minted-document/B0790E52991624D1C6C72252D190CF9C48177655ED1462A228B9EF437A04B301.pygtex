@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{p}{(}\PYG{n+nb}{in\PYGZhy{}package}\PYG{+w}{ }\PYG{l+s+ss}{\PYGZsh{}:num\PYGZhy{}methods.lab1}\PYG{p}{)}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{second\PYGZhy{}newthon.p}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{nde}\PYG{+w}{ }\PYG{n+nv}{x}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{n+nb}{/}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nv}{x}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{nde\PYGZhy{}end}\PYG{+w}{ }\PYG{n+nv}{nde}\PYG{p}{))}
+\PYG{+w}{     }\PYG{p}{(}\PYG{n+nv}{nde\PYGZhy{}h}\PYG{+w}{ }\PYG{n+nv}{nde}\PYG{p}{)))}
+
+\PYG{p}{(}\PYG{n+nb}{defun}\PYG{+w}{ }\PYG{n+nv}{second\PYGZhy{}newthon}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{nde}\PYG{+w}{ }\PYG{n+nv}{f}\PYG{+w}{ }\PYG{n+nv}{x}\PYG{p}{)}
+\PYG{+w}{  }\PYG{p}{(}\PYG{k}{let}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{n}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{nde\PYGZhy{}n}\PYG{+w}{ }\PYG{n+nv}{nde}\PYG{p}{))}
+\PYG{+w}{        }\PYG{p}{(}\PYG{n+nv}{p}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{second\PYGZhy{}newthon.p}\PYG{+w}{ }\PYG{n+nv}{nde}\PYG{+w}{ }\PYG{n+nv}{x}\PYG{p}{)))}
+\PYG{+w}{    }\PYG{p}{(}\PYG{k}{labels}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{second\PYGZhy{}newthon\PYGZus{}}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{k}\PYG{+w}{ }\PYG{n+nv}{qnt\PYGZus{}k}\PYG{+w}{ }\PYG{n+nv}{sum\PYGZus{}k}\PYG{p}{)}
+\PYG{+w}{              }\PYG{p}{(}\PYG{k}{if}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{\PYGZgt{}}\PYG{+w}{ }\PYG{n+nv}{k}\PYG{+w}{ }\PYG{n+nv}{n}\PYG{p}{)}\PYG{+w}{ }\PYG{n+nv}{sum\PYGZus{}k}
+\PYG{+w}{                  }\PYG{p}{(}\PYG{k}{let*}\PYG{+w}{ }\PYG{p}{((}\PYG{n+nv}{k1}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{1+}\PYG{+w}{ }\PYG{n+nv}{k}\PYG{p}{))}
+\PYG{+w}{                         }\PYG{p}{(}\PYG{n+nv}{qnt\PYGZus{}k1}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{*}\PYG{+w}{ }\PYG{n+nv}{qnt\PYGZus{}k}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{/}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{+}\PYG{+w}{ }\PYG{n+nv}{p}\PYG{+w}{ }\PYG{n+nv}{k}\PYG{p}{)}
+\PYG{+w}{                                           }\PYG{n+nv}{k1}\PYG{p}{)))}
+\PYG{+w}{                         }\PYG{p}{(}\PYG{n+nv}{sum\PYGZus{}k1}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{+}\PYG{+w}{ }\PYG{n+nv}{sum\PYGZus{}k}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{*}\PYG{+w}{ }\PYG{n+nv}{qnt\PYGZus{}k}\PYG{+w}{ }
+\PYG{+w}{                                           }\PYG{p}{(}\PYG{n+nv}{finite\PYGZhy{}subs}\PYG{+w}{ }
+\PYG{+w}{                                             }\PYG{n+nv}{f}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nv}{nde\PYGZhy{}i}\PYG{+w}{ }\PYG{n+nv}{nde}\PYG{+w}{ }\PYG{p}{(}\PYG{n+nb}{\PYGZhy{}}\PYG{+w}{ }\PYG{n+nv}{n}\PYG{+w}{ }\PYG{n+nv}{k}\PYG{p}{))}
+\PYG{+w}{                                             }\PYG{n+nv}{k}\PYG{+w}{ }\PYG{n+nv}{nde}\PYG{p}{)))))}
+\PYG{+w}{                    }\PYG{p}{(}\PYG{n+nv}{second\PYGZhy{}newthon\PYGZus{}}\PYG{+w}{ }\PYG{n+nv}{k1}\PYG{+w}{ }\PYG{n+nv}{qnt\PYGZus{}k1}\PYG{+w}{ }\PYG{n+nv}{sum\PYGZus{}k1}\PYG{p}{)))))}
+\PYG{+w}{      }\PYG{p}{(}\PYG{n+nv}{second\PYGZhy{}newthon\PYGZus{}}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{+w}{ }\PYG{l+m+mi}{1}\PYG{+w}{ }\PYG{l+m+mi}{0}\PYG{p}{))))}
+
+\end{Verbatim}
