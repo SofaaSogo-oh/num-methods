@@ -7,6 +7,7 @@
 (asdf:load-system :lab4)
 (asdf:load-system :lab5)
 (asdf:load-system :tble-cnst)
+(asdf:load-system :cw)
 
 (num-methods.lab0::main)
 

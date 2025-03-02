@@ -8,6 +8,9 @@
   (/ (- (nde-end nde) (nde-beg nde))
     (nde-n nde)))
 
+(defun nde-rng (nde)
+  (- (nde-end nde) (nde-beg nde)))
+
 (defun nde-i (nde i)
   (+ (nde-beg nde) (* i (nde-h nde))))
 

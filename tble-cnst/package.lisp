@@ -11,6 +11,7 @@
              #:make-nde-t
              #:nde-beg
              #:nde-end
+             #:nde-rng
              #:nde-n
              #:nde-h
              #:nde-i
