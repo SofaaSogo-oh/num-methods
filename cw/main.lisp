@@ -51,6 +51,12 @@
      (map-to-old *X-SPLIT* xi) 
      (map-to-old *Y-SPLIT* ni))))
 
+(defun reduced-changed-int (xi ni)
+  (* (/ 128 9)
+     (+ (* 24 xi)
+        (* 32 ni)
+        16)))
+
 (defparameter *target-int-value* 
   (/ 1024
      3))
@@ -73,17 +79,17 @@
 
 (length (get-sigma-points 1000 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*)))
 
-(defun calc-integral (n indicator splits)
+(defun calc-integral (n indicator splits f)
   (let ((points (get-sigma-points n indicator splits)))
     (/ (reduce #'+
-               (mapcar (curry #'apply 
-                              #'changed-int) points)) 
+               (mapcar (curry #'apply f) points)) 
        n)))
 
 (defun main nil
   (loop for i from 1 to 30 collect 
         (calc-integral 3000000 #'sigma-indicator 
-                      (list *X-SPLIT* *Y-SPLIT*))))
+                      (list *X-SPLIT* *Y-SPLIT*)
+                      #'reduced-changed-int)))
 
 (defun calc-confidence-mean (alist eps)
   (let* ((n (length alist))
@@ -109,4 +115,4 @@
                                                             (rcurry #'/ 2))
                                                    (list 0.10 0.05 0.02 0.001 0.002 0.001)))))))
 
-;(calc-confidence-mean (main) 0.05)
+(calc-confidence-mean (main) 0.05)
