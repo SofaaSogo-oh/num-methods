@@ -5,6 +5,14 @@
   (collect-frequency (loop for i from 0 to 10000 collect
                         (normalized-random)) 10)))
 
+(defun test-t-value nil
+  (loop for k from 1 to 8 do
+        (format t "~{~18a~^ ~}~%" (cons k (mapcar
+                                           (curry #'t-distribution k)
+                                           (mapcar (compose (curry #'- 1)
+                                                            (rcurry #'/ 2))
+                                                   (list 0.10 0.05 0.02 0.001 0.002 0.001)))))))
+
 
 (defun get-freq-mrx (n m)
   (let ((state (make-random-state t)))
@@ -107,12 +115,4 @@
     (list (- mean-v dlta) (+ mean-v dlta))))
   
 
-(defun test-t-value nil
-  (loop for k from 1 to 8 do
-        (format t "~{~18a~^ ~}~%" (cons k (mapcar
-                                           (curry #'t-distribution k)
-                                           (mapcar (compose (curry #'- 1)
-                                                            (rcurry #'/ 2))
-                                                   (list 0.10 0.05 0.02 0.001 0.002 0.001)))))))
-
-(calc-confidence-mean (main) 0.05)
+;(calc-confidence-mean (main) 0.05)
