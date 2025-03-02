@@ -51,6 +51,10 @@
      (map-to-old *X-SPLIT* xi) 
      (map-to-old *Y-SPLIT* ni))))
 
+(defparameter *target-int-value* 
+  (/ 1024
+     3))
+
 (defun get-area-points (n indicator splits)
   (remove-if-not
     (curry #'apply
@@ -105,4 +109,4 @@
                                                             (rcurry #'/ 2))
                                                    (list 0.10 0.05 0.02 0.001 0.002 0.001)))))))
 
-(calc-confidence-mean (main) 0.05)
+;(calc-confidence-mean (main) 0.05)
