@@ -91,7 +91,7 @@
                                           (- x mean-v)))
                        alist))
                     (1- n)))
-         (teps-v (t-distribution (1- n) (/ eps 2)))
+         (teps-v (t-distribution (1- n) (- 1 (/ eps 2))))
          (dlta (/ (* teps-v disp-v)
                   (sqrt n))))
     (list (- mean-v dlta) (+ mean-v dlta))))
