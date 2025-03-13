@@ -93,9 +93,9 @@
                (mapcar (curry #'apply f) points)) 
        n)))
 
-(defun main nil
-  (loop for i from 1 to 30 collect 
-        (calc-integral 3000000 #'sigma-indicator 
+(defun main (samples points)
+  (loop for i from 1 to samples collect 
+        (calc-integral points #'sigma-indicator 
                       (list *X-SPLIT* *Y-SPLIT*)
                       #'reduced-changed-int)))
 
@@ -115,4 +115,4 @@
     (list (- mean-v dlta) (+ mean-v dlta))))
   
 
-;(calc-confidence-mean (main) 0.05)
+(calc-confidence-mean (main 100 500000) 0.05)
