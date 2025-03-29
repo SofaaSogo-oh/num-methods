@@ -17,9 +17,20 @@
 (defun gauss (f nde g-rts l-rts)
   (let* ((a (nde-beg nde))
          (b (nde-end nde))
-         (dlta (/ (- b a) 2)))
-    (labels ((x_i (t_i) (+ a dlta (* dlta t_i)))
+         (dlta (/ (- b a) 2))
+         (mean-ab (/ (+ b a) 2)))
+    (labels ((x_i (t_i) (+ mean-ab (* dlta t_i)))
              (f_i (t_i) (funcall f (x_i t_i))))
       (reduce #'+
               (mapcar #'(lambda (a_i t_i) (* a_i (f_i t_i) dlta))
                       g-rts l-rts)))))
+
+;(defun gauss (f nde g-rts l-rts)
+;  (let* ((a (nde-beg nde))
+;         (b (nde-end nde))
+;         (dlta (/ (- b a) 2)))
+;    (labels ((x_i (t_i) (+ a dlta (* dlta t_i)))
+;             (f_i (t_i) (funcall f (x_i t_i))))
+;      (reduce #'+
+;              (mapcar #'(lambda (a_i t_i) (* a_i (f_i t_i) dlta))
+;                      g-rts l-rts)))))

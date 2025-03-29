@@ -1,0 +1,59 @@
+\subsection{Метод релаксации}
+
+Попробуем пойти от обратного, попробуем поработать с погрешностью измерений. Для точного корня системы линейных алгебраических уравнений известно, что
+\begin{align}
+  X = AX \Leftrightarrow AX - X = 0 \Leftrightarrow (\alpha - E) X - \beta = 0
+\end{align}
+
+Вот введем значение \(x^{(k)} + \tau^{(k)} = x\), тогда
+\begin{align}
+  \alpha (x^{(k)} + \tau^{(k)}) = \beta \Leftrightarrow \alpha \tau^{(k)} = \beta - \alpha x^{(k)} = \alpha(x - x^{(k)})
+\end{align}
+
+Итак, формула невязки имеет вид:
+\begin{align}
+  R_i^{(k)} = \beta_i  - x_i^{(k)} + \sum_{j=1, j\neq i}^n \alpha_{ij} x_j^{(k)}
+\end{align}
+
+И на каждом шаге мы определяем, наибольшую по модулю координату невязки \(R_s^{(k)}\), для соотвествующей координаты имеем \(R_s^{(k + 1)} = R_s^{(k)} - \Delta x_s^{(k)} =  0\), а для оставльных получаем \(R_i^{(k)} = R_i^{(k)} + \alpha_{is} \Delta x_s^{(k)}\).
+
+Другими словами, если мы имеем отображение \(\delta R\) такое, что она вычисляет
+\begin{align}
+  \delta R(x_i) = -x_i + \sum_{j=1, j\neq i}^n \alpha_{ij} x_j
+\end{align}
+
+И отображение \(M\)
+\begin{align}
+  M(x_i) = \begin{cases}
+    x_i,\,\iftxt\, x_i = \max\limits_i x_i\\
+    0,\,\iftxt\, x_i \neq \max\limits_i x_i\\
+  \end{cases}
+\end{align}
+
+Мы получаем такие реккурентные формулы:
+\begin{align}\label{eq:relax-iter}
+  x^{(k + 1)} = x^{(k)} + M(R^{(k)}) & & R^{(k + 1)} = R^{(k)} + \delta R \circ M (R^{(k)})
+\end{align}
+
+Условием останова алгоритма является
+\begin{align}\label{eq:relax-cond}
+  \max_i |R_i^{(k)}| < \varepsilon
+\end{align}
+
+\subsubsection*{Резюме}
+Итак, подытожим рассуждения. Исходя из сказанного, мы имеем:
+\begin{enumerate}
+  \item Итерационные формулы. Перепишем \eqref{eq:relax-iter}:
+\begin{align}
+  \begin{cases}
+    R_x^{(k)} = -\frac{1}{3} - x^{(k)} + \frac{1}{3} y^{(k)} + \frac{1}{3} z^{(k)} \\
+    R_y^{(k)} = 1 - y^{(k)} + \frac{1}{2} x^{(k)} + \frac{1}{4} z^{(k)} \\
+    R_z^{(k)} = -\frac{1}{2} - z^{(k)} + \frac{1}{3} x^{(k)} + \frac{1}{2} y^{(k)} 
+  \end{cases} 
+\end{align}
+  Как и было оговорено, берем на каждом шаге максимальную по модулю невязку, изменяем невязку и координаты.
+\item Условие окончания. Записано в \eqref{eq:relax-cond}
+\begin{align*}
+  \max \{ |R_x^{(k)}|, |R_y^{(k)}|, |R_z^{(k)}| \} < \varepsilon
+\end{align*}
+\end{enumerate}
