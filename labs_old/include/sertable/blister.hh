@@ -24,7 +24,7 @@ template <typename T> auto cell_wrapper(T &&data) {
       }};
 }
 // T... ↦ ostream& ↦ ostream&
-template <typename... T> auto row_wrapper(T &&...data) {
+ auto row_wrapper(auto &&...data) {
   return ostream_invoker{[args = std::forward_as_tuple(data...)](
                              std::ostream &os) -> std::ostream & {
     return std::apply(
