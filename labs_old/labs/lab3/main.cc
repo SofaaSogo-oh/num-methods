@@ -142,9 +142,24 @@ auto convert_to_row = [](size_t k, R3 cur, R3 prev) {
   return std::make_tuple(k, px, cx, dx, py, cy, dy);
 };
 
+auto &&check_input = [](double x, double y) {
+  if (!((std::abs(3 * (y - 3) * (y - 4)) < (2 * x - y) * (2 * x - y)) &&
+        (std::abs(3 * (2 * x - 3) * (x - 2)) < (2 * x - y) * (2 * x - y))))
+    throw std::invalid_argument(std::invoke([&]() {
+      std::stringstream ss;
+      ss << "Given argument is incorrect, it should be in this set:"
+         << std::endl;
+      ss << "{3|(y-3)(y-4)| < (2x-y)^2" << std::endl;
+      ss << "{3|(2x-3)(x-2)| < (2x-y)^2" << std::endl;
+      ss << "Given argument is: " << R3{x, y} << std::endl;
+      return ss.str();
+    }));
+};
+
 #if 1
 auto sim(R3 init_aprox, double eps) {
   return [init_aprox, eps](std::ostream &os) -> std::tuple<size_t, R3, double> {
+    std::apply(check_input, init_aprox.to_tuple());
     auto &&f = [](double x, double y) -> double {
       return x - ((2 * x - 3) * (x - 2)) / (2 * x - y);
     };
