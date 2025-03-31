@@ -1,2 +1,110 @@
 \subsection{Метод Ньютона}
+Пусть дана система нелинейных уравнений \cref{eq:sim-initsys}:
+\begin{align*}
+	\begin{cases}
+		f_1(x_1,\dots,x_n) = 0 \\
+		f_2(x_1,\dots,x_n) = 0 \\
+		\dots                  \\
+		f_n(x_1,\dots,x_n) = 0 \\
+	\end{cases}
+\end{align*}
 
+Где хотя бы одна из функций \(f_i,\, i=\overline{1,n}\) не линейна, а \(x_1,\dots,x_n\) --- неизвестные переменные.
+
+Необходимо найти корень:
+\begin{align}
+	\xi = \overline{x}^{(k)} + \overline{\alpha}^{(k)} \\
+	\overline{x}^{(k+1)} = \overline{x}^{(k)} + \overline{\alpha}^{(k)} \label{eq:newthon-prealpha-next}
+\end{align}
+Здесь \(x\) --- приближение, а \(\alpha\) --- погрешность корня.
+\begin{align}
+	F(\xi) = F(\overline{x}^{(k)} + \overline{\alpha}^{(k)}) = F(\overline{x}^{(k)}) + F'(\overline{x}^{(k)})\overline{\alpha}^{(k)} = \overline{0}
+\end{align}
+При том \(F' = J\) --- матрица Якоби:
+\begin{align}
+	F'(\overline{x}) = \begin{pmatrix}
+		                   \frac{\partial f_1(\overline{x})}{\partial x_1} & \frac{\partial f_1(\overline{x})}{\partial x_2} & \cdots                                          & \frac{\partial f_1(\overline{x})}{\partial x_n} \\
+		                   \frac{\partial f_2(\overline{x})}{\partial x_1} & \frac{\partial f_2(\overline{x})}{\partial x_2} & \cdots                                          & \frac{\partial f_2(\overline{x})}{\partial x_n} \\
+		                   \vdots                                          & \vdots                                          & \ddots                                          & \vdots                                          \\
+		                   \frac{\partial f_n(\overline{x})}{\partial x_1} & \frac{\partial f_n(\overline{x})}{\partial x_2}
+		                                                                   & \cdots                                          & \frac{\partial f_n(\overline{x})}{\partial x_n}
+	                   \end{pmatrix} = J(\overline{x}) \\
+	F + J\overline{\alpha} = \overline{0} \label{eq:pre-j}
+\end{align}
+
+Если матрица \(J\) невырождена, тогда найдется обратная матрица \(J^{-1}\). При умножении левой и правой части \cref{eq:pre-j} получается:
+\begin{align}
+	J^{-1} F + \overline{\alpha} = \overline{0} \Longrightarrow \overline{\alpha}^{(k)} = - J^{-1}(\overline{x}^{(k)})F(\overline{x}^{(k)}) \label{eq:res-alpha}
+\end{align}
+
+\subsubsection*{Итерационная формула}
+При подстановке \cref{eq:res-alpha} в \cref{eq:newthon-prealpha-next} выводится:
+\begin{align}\label{eq:newthon-res-iteration}
+	\overline{x}^{(k+1)} = \overline{x}^{(k)}  - J^{-1}(\overline{x}^{(k)})F(\overline{x}^{(k)})
+\end{align}
+
+\subsubsection*{Условие окончания}
+Одновременное выполнение двух условий:
+\begin{align}
+	\begin{cases}
+		|x_i^{(k+1)} - x_i^{(k)}| \leq \varepsilon,       & \forall i = \overline{1,n} \\
+		|f_i(x_1^{(k+1)},\dots,x_n^{(k+1)})| \leq \delta, & \forall i = \overline{1,n}
+	\end{cases}
+\end{align}
+
+\subsection{Метод Ньютона для рассматриваемого примера}
+Матрица Якоби:
+\begin{align}
+	J(x,y) = \begin{pmatrix}
+		         2 & 1 \\
+		         y & x
+	         \end{pmatrix}
+\end{align}
+Нахождение обратной матрицы:
+\begin{align*}
+	\begin{pmatrix}
+		2 & 1 & \vrule & 1 & 0 \\
+		y & x & \vrule & 0 & 1
+	\end{pmatrix} \to \begin{pmatrix}
+		                  2      & 1 & \vrule & 1  & 0 \\
+		                  y - 2x & 0 & \vrule & -x & 1
+	                  \end{pmatrix} \to \\
+	\to \begin{pmatrix}
+		    2 & 1 & \vrule & 1                 & 0                \\
+		    1 & 0 & \vrule & \frac{-x}{y - 2x} & \frac{1}{y - 2x}
+	    \end{pmatrix}
+	\to
+	\begin{pmatrix}
+		1 & 0 & \vrule & \frac{-x}{y - 2x} & \frac{1}{y - 2x}  \\
+		0 & 1 & \vrule & \frac{y}{y - 2x}  & \frac{-2}{y - 2x}
+	\end{pmatrix}
+\end{align*}
+Получена обратная матрица
+\begin{align}\label{eq:inv-j-example}
+	J^{-1} = \frac{1}{y - 2x} \begin{pmatrix}
+		                          -x & 1  \\
+		                          y  & -2
+	                          \end{pmatrix} = \frac{1}{2x-y}\begin{pmatrix}
+		                                                        x  & -1 \\
+		                                                        -y & 2
+	                                                        \end{pmatrix}
+\end{align}
+
+\subsubsection*{Итерационная формула}
+При подстановке \cref{eq:inv-j-example} в \cref{eq:newthon-res-iteration}:
+\begin{align}
+	\begin{cases}
+		x^{(k + 1)} = x^{(k)} - \frac{1}{2 x^{(k)} - y^{(k)}}(x^{(k)}(2x^{(k)}+y^{(k)}-7)-(x^{(k)}y^{(k)} - 6)) \\
+		y^{(k+1)} = y^{(k)} - \frac{1}{2 x^{(k)} - y^{(k)}}(-y^{(k)}(2x^{(k)}+y^{(k)}-7)+2(x^{(k)}y^{(k)} - 6))
+	\end{cases}
+\end{align}
+\subsubsection*{Условие окончания}
+Величины \(\varepsilon\) и \(\delta\) задаются самостоятельно:
+\begin{align}
+	\begin{cases}
+		|x^{(k+1)} - x^{(k)}| \leq \varepsilon \\
+		|y^{(k+1)} - y^{(k)}| \leq \varepsilon \\
+		|2x^{(k)} + y^{(k)} - 7| \leq \delta   \\
+		|x^{(k)}y^{(k)} - 6| \leq \delta
+	\end{cases}
+\end{align}
