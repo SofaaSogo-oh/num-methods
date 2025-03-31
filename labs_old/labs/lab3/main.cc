@@ -1,11 +1,10 @@
+#include "lab3/Rn.hh"
 #include "sertable/blister.hh"
 #include "sertable/try_blister.hh"
 #include <algorithm>
-#include <array>
+#include <cmath>
 #include <cstdlib>
-#include <iterator>
 #include <ostream>
-#include <tuple>
 #include <utility>
 
 const auto &&tmp_fill_cell = [](char c) {
@@ -41,108 +40,28 @@ template <typename F> auto table_print(F &&method) {
       }};
 }
 
-#if 0
-using R3 = std::tuple<double, double>;
-
-template <typename... T>
-auto operator-(const std::tuple<T...> &t1, const std::tuple<T...> &t2) {
-  return std::invoke(
-      [t1, t2]<size_t... inx>(std::index_sequence<inx...>) {
-        return std::make_tuple(std::get<inx>(t1) - std::get<inx>(t2)...);
-      },
-      std::index_sequence_for<T...>());
-}
-
-template <typename... T>
-std::ostream &operator<<(std::ostream &os, const std::tuple<T...> &t) {
-  return std::apply(
-      [&os]<typename... U>(U &&...args) -> std::ostream & {
-        return os << "(",
-               (os << ...
-                   << ostream_invoker([arg = std::forward<U>(args)](
-                                          std::ostream &os) -> std::ostream & {
-                        return os << arg << " ";
-                      }))
-                   << ")";
-      },
-      t);
-}
-
-template <typename... T> auto maxs(const std::tuple<T...> &seq) {
-  return std::apply([](auto &&...args) { return std::max({args...}); }, seq);
-}
-
-template <typename... T> auto abss(const std::tuple<T...> &seq) {
-  return std::apply(
-      [](auto &&...args) { return std::make_tuple(std::abs(args)...); }, seq);
-}
-
-#endif
-
-template <typename T, size_t N> struct Rn : std::array<T, N> {
-  Rn &operator-=(const Rn &obj) {
-    std::transform(this->begin(), this->end(), obj.begin(), this->begin(),
-                   std::minus<T>());
-    return *this;
-  }
-  constexpr auto to_tuple() const {
-    return std::invoke(
-        [&arr =
-             std::as_const(*this)]<size_t... inx>(std::index_sequence<inx...>) {
-          return std::make_tuple(arr[inx]...);
-        },
-        std::make_index_sequence<N>());
-  }
-};
-
-template <typename T, size_t N>
-Rn<T, N> operator-(const Rn<T, N> &a, const Rn<T, N> &b) {
-  auto res = a;
-  res -= b;
-  return res;
-}
-
-template <typename T, size_t N>
-std::ostream &operator<<(std::ostream &os, const Rn<T, N> &obj) {
-  os << "(";
-  std::transform(obj.begin(), obj.end(), std::ostream_iterator<std::string>(os),
-                 [](auto &&i) {
-                   std::stringstream ss;
-                   ss << i << " ";
-                   return ss.str();
-                 });
-  os << ")";
-  return os;
-}
-
-template <typename T, size_t N>
-std::istream &operator>>(std::istream &is, Rn<T, N> &obj) {
-  std::copy_n(std::istream_iterator<T>(is), N, obj.begin());
-  return is;
-}
-
-template <typename T, size_t N> Rn<T, N> abss(const Rn<T, N> &seq) {
-  Rn<T, N> res;
-  std::transform(seq.begin(), seq.end(), res.begin(),
-                 [](auto &&x) { return x < 0 ? -x : x; });
-  return res;
-}
-
-template <typename T, size_t N> T maxs(const Rn<T, N> &seq) {
-  return *std::max_element(seq.begin(), seq.end());
-}
-
 using R3 = Rn<double, 2>;
 constexpr double eps1 = 1e-3, eps2 = 1e-5;
 
 auto convert_to_row = [](size_t k, R3 cur, R3 prev) {
   auto [cx, cy] = cur.to_tuple();
   auto [px, py] = prev.to_tuple();
-  auto [dx, dy] = abss(cur - prev).to_tuple();
+  auto [dx, dy] = Rnu::abs(cur - prev).to_tuple();
   return std::make_tuple(k, px, cx, dx, py, cy, dy);
 };
 
-auto &&check_input = [](double x, double y) {
+template <typename T, size_t N> void throw_any_nan(const Rn<T, N> &rhs) {
+  if (std::any_of(rhs.begin(), rhs.end(),
+                  [](auto &&arg) { return std::isnan(arg); }))
+    throw std::logic_error{std::invoke([&rhs] {
+      std::stringstream ss;
+      ss << "There exists nan value in the given Rn vector" << std::endl
+         << "Rn = " << rhs << std::endl;
+      return ss.str();
+    })};
+}
+
+auto &&argument_check = [](double x, double y) {
   if (!((std::abs(3 * (y - 3) * (y - 4)) < (2 * x - y) * (2 * x - y)) &&
         (std::abs(3 * (2 * x - 3) * (x - 2)) < (2 * x - y) * (2 * x - y))))
     throw std::invalid_argument(std::invoke([&]() {
@@ -156,24 +75,68 @@ auto &&check_input = [](double x, double y) {
     }));
 };
 
-#if 1
-auto sim(R3 init_aprox, double eps) {
-  return [init_aprox, eps](std::ostream &os) -> std::tuple<size_t, R3, double> {
-    std::apply(check_input, init_aprox.to_tuple());
+using method_result = std::tuple<size_t, R3, double>;
+
+double f0(double x, double y) { return 2 * x + y - 7; }
+
+double f1(double x, double y) { return x * y - 6; }
+
+auto sim(const R3 &init_aprox, double eps) {
+  return [init_aprox, eps](std::ostream &os) -> method_result {
+    std::apply(argument_check, init_aprox.to_tuple());
     auto &&f = [](double x, double y) -> double {
       return x - ((2 * x - 3) * (x - 2)) / (2 * x - y);
     };
     auto &&g = [](double x, double y) -> double {
       return y + ((y - 3) * (y - 4)) / (2 * x - y);
     };
+    auto &&next = [&f, &g](const R3 &cur) -> R3 {
+      auto &&tup = cur.to_tuple();
+      return {std::apply(f, tup), std::apply(g, tup)};
+    };
+    auto &&ev_f = [](auto &&func, R3 x_k) -> double {
+      return std::abs(std::apply(func, x_k.to_tuple()));
+    };
     size_t k;
     R3 x_k = init_aprox;
     for (k = 0;; ++k) {
-      auto &&prev = std::exchange(x_k, R3{std::apply(f, x_k.to_tuple()),
-                                          std::apply(g, x_k.to_tuple())});
+      auto &&prev = std::exchange(x_k, next(x_k));
       os << std::apply([](auto &&...args) { return row_wrapper(args...); },
                        convert_to_row(k, x_k, prev));
-      if (maxs(abss(x_k - prev)) < eps)
+      throw_any_nan(x_k);
+      if (Rnu::norm(x_k - prev) < eps &&
+          (ev_f(f0, x_k) < eps && ev_f(f1, x_k) < eps))
+        break;
+    }
+    return {k, x_k, eps};
+  };
+}
+
+#if 1
+auto newthon(const R3 &init_aprx, double eps) {
+  return [init_aprx, eps](std::ostream &os) -> method_result {
+    auto &&f = [](double x, double y) -> double {
+      return x - (x * f0(x, y) - f1(x, y)) / (2 * x - y);
+    };
+    auto &&g = [](double x, double y) -> double {
+      return y - (-y * f0(x, y) + 2 * f1(x, y)) / (2 * x - y);
+    };
+    auto &&next = [&f, &g](const R3 &cur) -> R3 {
+      auto &&tup = cur.to_tuple();
+      return {std::apply(f, tup), std::apply(g, tup)};
+    };
+    auto &&ev_f = [](auto &&func, const R3 &cur) {
+      return std::abs(std::apply(func, cur.to_tuple()));
+    };
+    size_t k;
+    R3 x_k = init_aprx;
+    for (k = 0;; ++k) {
+      auto &&prev = std::exchange(x_k, next(x_k));
+      os << std::apply([](auto &&...args) { return row_wrapper(args...); },
+                       convert_to_row(k, x_k, prev));
+      throw_any_nan(x_k);
+      if (Rnu::norm(x_k - prev) < eps &&
+          (ev_f(f0, x_k) < eps && ev_f(f1, x_k) < eps))
         break;
     }
     return {k, x_k, eps};
@@ -189,6 +152,11 @@ int main() {
     std::cout << "Simple iteration method: \n"
               << table_print(sim(init_aprx, eps1)) << '\n'
               << table_print(sim(init_aprx, eps2));
+  });
+  try_block([init_aprx] {
+    std::cout << "Newthon method: \n"
+              << table_print(newthon(init_aprx, eps1)) << '\n'
+              << table_print(newthon(init_aprx, eps2));
   });
   return 0;
 }

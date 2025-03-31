@@ -1,0 +1,48 @@
+\subsection{Метод простых итераций}
+Пусть дана система нелинейных уравнений:
+\begin{align}\label{eq:sim-initsys}
+	\begin{cases}
+		f_1(x_1,\dots,x_n) = 0 \\
+		f_2(x_1,\dots,x_n) = 0 \\
+		\dots                  \\
+		f_n(x_1,\dots,x_n) = 0 \\
+	\end{cases}
+\end{align}
+
+Где хотя бы одна из функций \(f_i,\, i=\overline{1,n}\) не линейна, а \(x_1,\dots,x_n\) --- неизвестные переменные.
+
+С помощью преобразований система \cref{eq:sim-initsys} приводится к системе
+\begin{align}\label{eq:sim-eps-sys}
+	\begin{cases}
+		x_1 = \varphi_1(x_1,\dots,x_n) \\
+		x_2 = \varphi_2(x_1,\dots,x_n) \\
+		\dots                          \\
+		x_n = \varphi_n(x_1,\dots,x_n) \\
+	\end{cases}
+\end{align}
+
+При том нам необходимо, чтобы \(\varphi\) было сжимающим отображением. Сжимаемость этого отображения определяется из достаточных условий сходимости метода простых итераций.
+
+\subsubsection*{Достаточное условие сходимости метода простых итераций}
+Система \cref{eq:sim-eps-sys} сходится при выполнении хотя бы одного из двух условий:
+\begin{align}
+	\sum_{j=1}^n\left| \frac{\partial \varphi_i}{\partial x_j} \right|, & \forall i = \overline{1, n} \\
+	\sum_{i=1}^n\left| \frac{\partial \varphi_i}{\partial x_j} \right|, & \forall j = \overline{1, n}
+\end{align}
+
+\subsubsection*{Условие окончания}
+Одновременное выполнение двух условий:
+\begin{align}
+	\begin{cases}
+		|x_i^{(k+1)} - x_i^{(k)}| \leq \varepsilon,       & \forall i = \overline{1,n} \\
+		|f_i(x_1^{(k+1)},\dots,x_n^{(k+1)})| \leq \delta, & \forall i = \overline{1,n}
+	\end{cases}
+\end{align}
+
+\subsubsection{Метод простых итераций для рассматриваемого примера}
+\begin{align}
+	\frac{\partial f_1}{\partial x} = 2 &  &
+	\frac{\partial f_1}{\partial y} = 1 &  &
+	\frac{\partial f_2}{\partial x} = y &  &
+	\frac{\partial f_2}{\partial y} = x
+\end{align}

@@ -1,4 +1,4 @@
 set(LAB lab2)
-set(SRCS main.cc)
+set(SRCS table.cc main.cc)
 
 add_executable(${LAB} ${SRCS})
