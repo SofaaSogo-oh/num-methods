@@ -14,21 +14,32 @@
 С помощью преобразований система \cref{eq:sim-initsys} приводится к системе
 \begin{align}\label{eq:sim-eps-sys}
 	\begin{cases}
-		x_1 = \varphi_1(x_1,\dots,x_n) \\
-		x_2 = \varphi_2(x_1,\dots,x_n) \\
-		\dots                          \\
-		x_n = \varphi_n(x_1,\dots,x_n) \\
+		x_1 = \Phi_1(x_1,\dots,x_n)= x_1+ \varphi_1(x_1,\dots,x_n) = x_1+\sum_{i = 1}^n a_{1 i} f_i(x_1,\dots,x_n) \\
+		x_2 = \Phi_2(x_1,\dots,x_n)= x_2+ \varphi_2(x_1,\dots,x_n) = x_2+\sum_{i = 1}^n a_{2 i} f_i(x_1,\dots,x_n) \\
+		\dots                                                                                                      \\
+		x_n = \Phi_n(x_1,\dots,x_n)= x_n+ \varphi_n(x_1,\dots,x_n) = x_n+\sum_{i = 1}^n a_{n i} f_i(x_1,\dots,x_n) \\
 	\end{cases}
 \end{align}
 
-При том нам необходимо, чтобы \(\varphi\) было сжимающим отображением. Сжимаемость этого отображения определяется из достаточных условий сходимости метода простых итераций.
+При том нам необходимо, чтобы \(\Phi \) было сжимающим отображением. Сжимаемость этого отображения определяется из достаточных условий сходимости метода простых итераций.
 
 \subsubsection*{Достаточное условие сходимости метода простых итераций}
 Система \cref{eq:sim-eps-sys} сходится при выполнении хотя бы одного из двух условий:
-\begin{align}
-	\sum_{j=1}^n\left| \frac{\partial \varphi_i}{\partial x_j} \right|, & \forall i = \overline{1, n} \\
-	\sum_{i=1}^n\left| \frac{\partial \varphi_i}{\partial x_j} \right|, & \forall j = \overline{1, n}
+\begin{align}\label{eq:finalise-condition}
+	\sum_{i=1}^n\left| \frac{\partial \Phi_i}{\partial x_j} \right|, & \forall j = \overline{1, n} \\
+	\sum_{j=1}^n\left| \frac{\partial \Phi_i}{\partial x_j} \right|, & \forall i = \overline{1, n}
 \end{align}
+
+\subsubsection*{Итерационная формула}
+\begin{align}
+	\begin{cases}\label{eq:common-iter-formula}
+		x_1^{(k+1)} = \Phi_1(x_1^{(k)},\dots,x_n^{(k)}) \\
+		x_2^{(k+1)} = \Phi_2(x_1^{(k)},\dots,x_n^{(k)}) \\
+		\dots                                           \\
+		x_n^{(k+1)} = \Phi_n(x_1^{(k)},\dots,x_n^{(k)}) \\
+	\end{cases}
+\end{align}
+
 
 \subsubsection*{Условие окончания}
 Одновременное выполнение двух условий:
@@ -39,10 +50,72 @@
 	\end{cases}
 \end{align}
 
-\subsubsection{Метод простых итераций для рассматриваемого примера}
+\subsection{Метод простых итераций для рассматриваемого примера}
 \begin{align}
+	\begin{cases}
+		f_1(x, y) = 2x + y - 7 \\
+		f_2(x, y) = xy - 6
+	\end{cases}
+\end{align}
+Функции \(\Phi_i\) для \cref{eq:sim-eps-sys} :
+\begin{align}
+	\begin{cases}
+		\Phi_1 = x + \alpha (2 x + y - 7) + \beta (xy - 6)  \\
+		\Phi_2 = y + \gamma (2 x + y - 7) + \delta (xy - 6) \\
+	\end{cases}
+\end{align}
+\begin{align}\label{eq:partials}
 	\frac{\partial f_1}{\partial x} = 2 &  &
 	\frac{\partial f_1}{\partial y} = 1 &  &
 	\frac{\partial f_2}{\partial x} = y &  &
 	\frac{\partial f_2}{\partial y} = x
+\end{align}
+А тогда условие \cref{eq:finalise-condition} записывается:
+\begin{align}
+	\begin{cases}
+		|1 + \alpha \frac{\partial f_1}{\partial x} + \beta \frac{\partial f_2}{\partial x}| + |\gamma \frac{\partial f_1}{\partial x} + \beta \frac{\partial f_2}{\partial x}| < 1 \\
+		|\alpha \frac{\partial f_1}{\partial y} + \beta \frac{\partial f_2}{\partial y}| + |1 + \gamma \frac{\partial f_1}{\partial y} + \beta \frac{\partial f_2}{\partial y}| < 1 \\
+	\end{cases}
+\end{align}
+Пусть значение каждого слагаемого равняется нулю:
+\begin{align}\label{eq:pre-subst}
+	\begin{cases}
+		1 + \alpha \frac{\partial f_1}{\partial x} + \beta \frac{\partial f_2}{\partial x} = 0 \\
+		\gamma \frac{\partial f_1}{\partial x} + \beta \frac{\partial f_2}{\partial x} = 0     \\
+		\alpha \frac{\partial f_1}{\partial y} + \beta \frac{\partial f_2}{\partial y} = 0     \\
+		1 + \gamma \frac{\partial f_1}{\partial y} + \beta \frac{\partial f_2}{\partial y} = 0
+	\end{cases}
+\end{align}
+При подстановке \cref{eq:partials} в \cref{eq:pre-subst}:
+\begin{align}\label{eq:found-muls}
+	\begin{cases}
+		1 + 2 \alpha + \beta y = 0 \\
+		2 \gamma + \delta y = 0    \\
+		\alpha + \beta x = 0       \\
+		1 + \gamma + \delta x = 0
+	\end{cases} \Longrightarrow \begin{cases}
+		                            \alpha = \frac{-x}{2x - y} \\
+		                            \beta = \frac{1}{2x - y}   \\
+		                            \gamma = \frac{-y}{y - 2x} \\
+		                            \delta = \frac{2}{y - 2x}
+	                            \end{cases}
+\end{align}
+
+\subsubsection*{Итерационная формула}
+При подстановке \cref{eq:found-muls} в \(\Phi\), а затем в \cref{eq:common-iter-formula}:
+\begin{align}
+	\begin{cases}
+		x^{(k + 1)} = x^{(k)} + \frac{-x^{(k)}}{2x^{(k)} - y^{(k)}} (2x^{(k)} + y^{(k)} - 7) + \frac{1}{2x^{(k)}-y^{(k)}} (x^{(k)}y^{(k)} - 6)     \\
+		y^{(k + 1)} = y^{(k)} + \frac{-y^{(k)}}{ y^{(k)} - 2x^{(k)} } (2x^{(k)} + y^{(k)} - 7) + \frac{1}{y^{(k)} - 2x^{(k)}} (x^{(k)}y^{(k)} - 6) \\
+	\end{cases}
+\end{align}
+\subsubsection*{Услоие окончания}
+Величины \(\varepsilon\) и \(\delta\) задаются самостоятельно:
+\begin{align}
+	\begin{cases}
+		|x^{(k+1)} - x^{(k)}| \leq \varepsilon \\
+		|y^{(k+1)} - y^{(k)}| \leq \varepsilon \\
+		|2x^{(k)} + y^{(k)} - 7| \leq \delta   \\
+		|x^{(k)}y^{(k)} - 6| \leq \delta
+	\end{cases}
 \end{align}
