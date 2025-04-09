@@ -1,15 +1,3 @@
-#include "sertable/blister.hh"
-#include <cmath>
-#include <cstdlib>
-#include <limits>
-#include <ostream>
-
-const auto &&fill_cell = tmp_fill_cell('-');
-const auto &&hard_fill_cell = tmp_fill_cell('=');
-
-template <size_t sz> using size_const = std::integral_constant<size_t, sz>;
-constexpr size_t table_width = 12;
-
 namespace cnst {
 constexpr double gamma = -1.7, m = -1.7, alpha = -.5, betta = .4, M = .1,
                  N = -.5;
@@ -17,25 +5,6 @@ constexpr double l = 1.0, h = l / 10;
 constexpr double a = 1.0, k = h / a;
 constexpr size_t I = 10, J = 11;
 } // namespace cnst
-
-const auto &&table_header = std::invoke(
-    format_n_seq,
-    [](auto &&x) {
-      if (x == 0)
-        return std::string("t");
-      std::stringstream ss;
-      ss << "x=" << cnst::h * (x - 1);
-      return ss.str();
-    },
-    size_const<table_width>());
-
-const auto &&table_line = std::invoke(
-    format_n_seq, [](auto &&x) { return fill_cell; },
-    size_const<table_width>());
-
-const auto &&table_hard_line = std::invoke(
-    format_n_seq, [](auto &&x) { return hard_fill_cell; },
-    size_const<table_width>());
 
 constexpr auto &&f = [](double x) -> double {
   return cnst::gamma * std::exp(cnst::m * x) + std::cos(cnst::gamma * x);

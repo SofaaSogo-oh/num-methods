@@ -1,0 +1,107 @@
+\section{Цель работы}
+Научиться находить приближённое решение краевой задачи для обыкновенного дифференциального уравнения второго порядка методом прогонки.
+
+\section{Содержание работы}
+\begin{enumerate}
+	\item Изучить метод прогонки для решения краевой задачи для обыкновенного дифференциального уравнения второго порядка.
+	\item Составить программу, реализующую прямой и обратный ход метода прогонки, и решить численно на заданном отрезке краевую задачу для линейного дифференциального уравнения второго порядка с шагом \(h=\frac{b-a}{n}\), где \(n = 10\), затем \(n=20\).
+	\item Сделать вывод.
+	\item Составить отчет о проделанной работе.
+\end{enumerate}
+
+\section{Выполнение работы}
+\subsection{Задание}
+Составить программу для реализации прямого и обратного хода метода прогонки и численно решить на отрезке \([0,1]\) дифференциальное уравнение
+\begin{align}
+	y'' + y' \cos x - y = \frac{1}{x}
+\end{align}
+При заданных условиях:
+\begin{align}
+	\begin{cases}
+		y'(1)+2y(1) = 2 \\
+		y(2)        = 0
+	\end{cases}
+\end{align}
+С шагом \(h=\frac{b-a}{n}\), где \(n = 10\), затем \(n=20\).
+\subsection{Решение}
+Рассмотрим линейное дифференциальное уравнение:
+\begin{align}\label{eq:basement}
+	y''+p(x)y'+q(x)y=f(x)
+\end{align}
+с краевыми условиями:
+\begin{align}
+	\begin{cases}
+		\alpha_0y'(a)+\alpha_1y(a)=A, \\
+		\beta_0y'(b)+\beta_1y(b)=B
+	\end{cases}
+\end{align}
+В предположении, что
+\begin{align}\label{eq:basecond}
+	p, q, f \in C[a,b] \\
+	\alpha_0^2+\alpha_1^2\neq0,\, \beta_0^2+\beta_1^2\neq0
+\end{align}
+\cref{eq:basement} заменяется на конечно-разностные уравнения:
+\begin{align}\label{eq:basement-mod}
+  \frac{y_{i+1}-2y_i+y_{i-1}}{h^2}+p_i\frac{y_{i+1}-y_{i-1}}{2h}+q_iy_i=f_i,\, i=\overline{1,n-1}
+\end{align}
+\cref{eq:basecond}:
+\begin{align}
+  \begin{cases}\label{eq:basecond-mod}
+    \alpha_0\frac{y_1-y_0}{h}+\alpha_1y_0=A,\\
+    \beta_0\frac{y_n-y_{n-1}}{h}+\beta_1y_n=B.
+  \end{cases}
+\end{align}
+
+Система \cref{eq:basement-mod,eq:basecond-mod} состоит из \((n+1)\)-го уравнения первой степени относительно \((n+1)\)-го неизвестного \(y_0,y_1,\dots,y_n\). Эта система решается методом прогонки.
+\subsection{Метод прогонки}
+\subsubsection{Прямой ход}
+\begin{enumerate}
+  \item Вводятся величины:
+    \begin{align}
+      m_i=\frac{2h^2q_i-4}{2+hp_i} && r_i=\frac{2-hp_i}{2+hp_i} && \varphi_i=\frac{2h^2f_i}{2+hp_i} && i = \overline{1,n-1}
+    \end{align}
+  \item Вводятся \(c_0,\, d_0\):
+    \begin{align}
+      c_0=\frac{\alpha_0}{h\alpha_1-\alpha_0},\, d_0=\frac{Ah}{\alpha_0}
+    \end{align}
+  \item Реккурентно задаются:
+    \begin{align}
+      c_i=\frac{1}{m_i-r_ic_{i-1}},\,d_i=\varphi_i-r_ic_{i-1}d_{i-1},\,i=\overline{1,n-1}
+    \end{align}
+\end{enumerate}
+\subsubsection{Обратный ход}
+\begin{enumerate}
+  \item Вводим \(y_n\):
+    \begin{align}
+    y_n=\frac{Bh+\beta_0c_{n-1}d_{n-1}}{\beta_0(c_{n-1}+1)h\beta_1}.
+    \end{align}
+  \item Реккурентно:
+    \begin{align}\label{eq:rev-res}
+      y_i=c_i(d_i-y_{i+1}),\, i=\overline{0,n-1}
+    \end{align}
+  \item Значение \cref{eq:rev-res} сравнивается с 
+    \begin{align}
+      y_0=\frac{Ah-a_0y_1}{ha_1-a_0}
+    \end{align}
+\end{enumerate}
+\subsection{Для примера}
+
+Составить программу для реализации прямого и обратного хода метода прогонки и численно решить на отрезке \([0,1]\) дифференциальное уравнение
+\begin{align*}
+	y'' + y' \cos x - y = \frac{1}{x}
+\end{align*}
+При заданных условиях:
+\begin{align*}
+	\begin{cases}
+		y'(1)+2y(1) = 2 \\
+		y(2)        = 0
+	\end{cases}
+\end{align*}
+С шагом \(h=\frac{b-a}{n}=\frac{1}{n}\), где \(n = 10\), затем \(n=20\).
+
+Отсюда:
+\begin{align*}
+  p(x)=\cos x & & q(x) = -1 & & f(x)=\frac{1}{x}\\
+  \alpha_0 = 1 && \alpha_1 = 2 & & \beta_0 = 0 & & \beta_1 = 1 \\
+  A = 2 && B = 0 && a = 1 && b = 2
+\end{align*}
