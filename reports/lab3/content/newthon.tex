@@ -61,33 +61,39 @@
 	         \end{pmatrix}
 \end{align}
 Нахождение обратной матрицы:
+% \begin{align*}
+% 	\begin{pmatrix}
+% 		2 & 1 & \vrule & 1 & 0 \\
+% 		y & x & \vrule & 0 & 1
+% 	\end{pmatrix} \to \begin{pmatrix}
+% 		                  2      & 1 & \vrule & 1  & 0 \\
+% 		                  y - 2x & 0 & \vrule & -x & 1
+% 	                  \end{pmatrix} \to \\
+% 	\to \begin{pmatrix}
+% 		    2 & 1 & \vrule & 1                 & 0                \\
+% 		    1 & 0 & \vrule & \frac{-x}{y - 2x} & \frac{1}{y - 2x}
+% 	    \end{pmatrix}
+% 	\to
+% 	\begin{pmatrix}
+% 		1 & 0 & \vrule & \frac{-x}{y - 2x} & \frac{1}{y - 2x}  \\
+% 		0 & 1 & \vrule & \frac{y}{y - 2x}  & \frac{-2}{y - 2x}
+% 	\end{pmatrix}
+% \end{align*}
 \begin{align*}
-	\begin{pmatrix}
-		2 & 1 & \vrule & 1 & 0 \\
-		y & x & \vrule & 0 & 1
-	\end{pmatrix} \to \begin{pmatrix}
-		                  2      & 1 & \vrule & 1  & 0 \\
-		                  y - 2x & 0 & \vrule & -x & 1
-	                  \end{pmatrix} \to \\
-	\to \begin{pmatrix}
-		    2 & 1 & \vrule & 1                 & 0                \\
-		    1 & 0 & \vrule & \frac{-x}{y - 2x} & \frac{1}{y - 2x}
-	    \end{pmatrix}
-	\to
-	\begin{pmatrix}
-		1 & 0 & \vrule & \frac{-x}{y - 2x} & \frac{1}{y - 2x}  \\
-		0 & 1 & \vrule & \frac{y}{y - 2x}  & \frac{-2}{y - 2x}
-	\end{pmatrix}
+	J^{-1}(x,y) = \frac{1}{\det J(x,y)} \begin{pmatrix}
+		                                    x  & -y \\
+		                                    -1 & 2
+	                                    \end{pmatrix}^T = \frac{1}{2x-y}\begin{pmatrix}
+		                                                                    x  & -1 \\
+		                                                                    -y & 2
+	                                                                    \end{pmatrix}
 \end{align*}
 Получена обратная матрица
 \begin{align}\label{eq:inv-j-example}
-	J^{-1} = \frac{1}{y - 2x} \begin{pmatrix}
-		                          -x & 1  \\
-		                          y  & -2
-	                          \end{pmatrix} = \frac{1}{2x-y}\begin{pmatrix}
-		                                                        x  & -1 \\
-		                                                        -y & 2
-	                                                        \end{pmatrix}
+	J^{-1} =  \frac{1}{2x-y}\begin{pmatrix}
+		                        x  & -1 \\
+		                        -y & 2
+	                        \end{pmatrix}
 \end{align}
 
 \subsubsection*{Итерационная формула}
@@ -102,9 +108,48 @@
 Величины \(\varepsilon\) и \(\delta\) задаются самостоятельно:
 \begin{align}
 	\begin{cases}
-		|x^{(k+1)} - x^{(k)}| \leq \varepsilon \\
-		|y^{(k+1)} - y^{(k)}| \leq \varepsilon \\
-		|2x^{(k)} + y^{(k)} - 7| \leq \delta   \\
-		|x^{(k)}y^{(k)} - 6| \leq \delta
+		|x^{(k+1)} - x^{(k)}| \leq \varepsilon   \\
+		|y^{(k+1)} - y^{(k)}| \leq \varepsilon   \\
+		|2x^{(k+1)} + y^{(k+1)} - 7| \leq \delta \\
+		|x^{(k+1)}y^{(k+1)} - 6| \leq \delta
+	\end{cases}
+\end{align}
+
+\subsection{Модифицированный метод Ньютона}
+Если \(J^{-1}(\overline{x}^{(k)})\in C U\overline{\xi} \), начальное приближение \(\overline{x}^{(0)}\to\overline{\xi}\), то можно предположить, что
+\begin{align}\label{eq:approx-j}
+	J^{-1}(\overline{x}^{(k)}) \approx J^{-1}(\overline{x}^{(0)})
+\end{align}
+\subsubsection*{Итерационная формула}
+Предположив \cref{eq:approx-j} в \cref{eq:newthon-res-iteration}, выводится:
+\begin{align}
+	\overline{x}^{(k+1)} = \overline{x}^{(k)}  - J^{-1}(\overline{x}^{(0)})F(\overline{x}^{(k)})
+\end{align}
+
+\subsubsection*{Условие окончания}
+Одновременное выполнение двух условий:
+\begin{align}
+	\begin{cases}
+		|x_i^{(k+1)} - x_i^{(k)}| \leq \varepsilon,       & \forall i = \overline{1,n} \\
+		|f_i(x_1^{(k+1)},\dots,x_n^{(k+1)})| \leq \delta, & \forall i = \overline{1,n}
+	\end{cases}
+\end{align}
+
+\subsection{Модифицированный метод Ньютона для рассматриваемого примера}
+\subsubsection*{Итерационная формула}
+\begin{align}
+	\begin{cases}
+		x^{(k + 1)} = x^{(k)} - \frac{1}{2 x^{(0)} - y^{(0)}}(x^{(0)}(2x^{(k)}+y^{(k)}-7)-(x^{(k)}y^{(k)} - 6)) \\
+		y^{(k+1)} = y^{(k)} - \frac{1}{2 x^{(0)} - y^{(0)}}(-y^{(0)}(2x^{(k)}+y^{(k)}-7)+2(x^{(k)}y^{(k)} - 6))
+	\end{cases}
+\end{align}
+\subsubsection*{Условие окончания}
+Величины \(\varepsilon\) и \(\delta\) задаются самостоятельно:
+\begin{align}
+	\begin{cases}
+		|x^{(k+1)} - x^{(k)}| \leq \varepsilon   \\
+		|y^{(k+1)} - y^{(k)}| \leq \varepsilon   \\
+		|2x^{(k+1)} + y^{(k+1)} - 7| \leq \delta \\
+		|x^{(k+1)}y^{(k+1)} - 6| \leq \delta
 	\end{cases}
 \end{align}

@@ -21,22 +21,20 @@
 (mapcar (curry #'nde-i *TARGET-NDE*) (iota (1+ (nde-n *target-nde*))))
 
 (defun main ()
-  (let ((table (ascii-table:make-table *interpl-table-deriv* :header "Приближенное вычислкение производной"))
+  (let ((table (ascii-table:make-table '("x" "f'(x)" " ̅x₁" "Pᴵₙ(x)" "ΔPᴵₙ(x)" " ̅x" "P𝕀ₙ(x)" "ΔP𝕀ₙ(x)") :header "Приближенное вычислкение производной"))
         (total_points (insert_natural "Введите число точек: ")))
     (dotimes (i total_points)
       (let* ((x (insert_from_range (format nil "Введите точку x_~A: " i) *TARGET-NDE*))
-             (f<x> (target-f-src x))
-             (PI<x> (first-newthon.beg *TARGET-NDE* #'target-f-src x))
-             (dPI<x> (abs (- f<x> PI<x>)))
+             (f<x> (target-f x))
+             (PI_x0 (first-newthon.x_0 *TARGET-NDE* x))
              (PI_<x> (first-newthon.near *TARGET-NDE* #'target-f-src x))
              (dPI_<x> (abs (- f<x> PI_<x>)))
-             (PII<x> (second-newthon.end *TARGET-NDE* #'target-f-src x))
-             (dPII<x> (abs (- f<x> PII<x>)))
+             (PII_x0 (second-newthon.x_n *TARGET-NDE* x))
              (PII_<x> (second-newthon.near *TARGET-NDE* #'target-f-src x))
              (dPII_<x> (abs (- f<x> PII_<x>))))
         (ascii-table:add-row table (list x f<x>
-                                         PII<x> dPII<x>
-                                         PII_<x> dPII_<x>))))
+                                         PI_X0 PI_<x> dPI_<x>
+                                         PII_X0 PII_<x> dPII_<x>))))
     (ascii-table:display table)))
 
 (labels ((sign (x) (format nil "~:[~;+~]~a" (> x 0) x))

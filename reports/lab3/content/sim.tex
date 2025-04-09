@@ -106,16 +106,16 @@
 \begin{align}
 	\begin{cases}
 		x^{(k + 1)} = x^{(k)} + \frac{-x^{(k)}}{2x^{(k)} - y^{(k)}} (2x^{(k)} + y^{(k)} - 7) + \frac{1}{2x^{(k)}-y^{(k)}} (x^{(k)}y^{(k)} - 6)     \\
-		y^{(k + 1)} = y^{(k)} + \frac{-y^{(k)}}{ y^{(k)} - 2x^{(k)} } (2x^{(k)} + y^{(k)} - 7) + \frac{1}{y^{(k)} - 2x^{(k)}} (x^{(k)}y^{(k)} - 6) \\
+		y^{(k + 1)} = y^{(k)} + \frac{-y^{(k)}}{ y^{(k)} - 2x^{(k)} } (2x^{(k)} + y^{(k)} - 7) + \frac{2}{y^{(k)} - 2x^{(k)}} (x^{(k)}y^{(k)} - 6) \\
 	\end{cases}
 \end{align}
 \subsubsection*{Условие окончания}
 Величины \(\varepsilon\) и \(\delta\) задаются самостоятельно:
 \begin{align}
 	\begin{cases}
-		|x^{(k+1)} - x^{(k)}| \leq \varepsilon \\
-		|y^{(k+1)} - y^{(k)}| \leq \varepsilon \\
-		|2x^{(k)} + y^{(k)} - 7| \leq \delta   \\
-		|x^{(k)}y^{(k)} - 6| \leq \delta
+		|x^{(k+1)} - x^{(k)}| \leq \varepsilon   \\
+		|y^{(k+1)} - y^{(k)}| \leq \varepsilon   \\
+		|2x^{(k+1)} + y^{(k+1)} - 7| \leq \delta \\
+		|x^{(k+1)}y^{(k+1)} - 6| \leq \delta
 	\end{cases}
 \end{align}

@@ -17,5 +17,6 @@
                                              f (nde-i nde (- n k))
                                              k nde)))))
                     (second-newthon_ k1 qnt_k1 sum_k1)))))
+      (format t "t: ~a~%" p)
       (second-newthon_ 0 1 0))))
 

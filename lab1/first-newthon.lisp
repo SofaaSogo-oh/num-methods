@@ -15,5 +15,6 @@
                                             k1)))
                           (sum_k1 (+ sum_k (* qnt_k (finite-subs f x_0 k nde)))))
                     (first-newthon_ k1 qnt_k1 sum_k1)))))
+      (format t "x_0: ~a ~%q: ~a~%" x_0 q)
       (first-newthon_ 0 1 0))))
 
