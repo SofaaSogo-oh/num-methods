@@ -4,13 +4,6 @@
 #include <ostream>
 #include <utility>
 
-const auto &&tmp_fill_cell = [](char c) {
-  return ostream_invoker{[c](std::ostream &os) -> std::ostream & {
-    os << std::setfill(c) << c << std::setfill(' ');
-    return os;
-  }};
-};
-
 const auto &&fill_cell = tmp_fill_cell('-');
 const auto &&hard_fill_cell = tmp_fill_cell('=');
 

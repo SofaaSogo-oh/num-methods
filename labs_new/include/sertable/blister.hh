@@ -35,3 +35,21 @@ template <typename T> auto cell_wrapper(T &&data) {
             std::move(args));
       }};
 }
+
+auto tmp_fill_cell(char c) {
+  return ostream_invoker{[c](std::ostream &os) -> std::ostream & {
+    os << std::setfill(c) << c << std::setfill(' ');
+    return os;
+  }};
+};
+
+template <size_t sz> using size_const = std::integral_constant<size_t, sz>;
+
+auto &&format_n_seq = []<size_t n>(auto &&format, size_const<n>) {
+  return std::invoke(
+      [&format]<std::size_t... inx>(std::index_sequence<inx...>) {
+        return row_wrapper(format(inx)...);
+      },
+      std::make_index_sequence<n>());
+};
+
