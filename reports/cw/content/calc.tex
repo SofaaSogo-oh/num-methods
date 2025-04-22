@@ -1,0 +1,8 @@
+\subsection{Прямое вычисление интеграла}
+
+\begin{multline}
+	\iint\limits_D(2x+y)dxdy = \int_2^6\int_{8/x}^{2x} (2x+y) dy dx = \int_2^6 \roundbrac{2xy\Bigr|_{8/x}^{2x} + \frac{y^2}{2}\Bigr|_{8/x}^{2x} }dx = \\
+	= \int_2^6 \roundbrac{4x^2 - 16 + \frac{4x^2}{2} - \frac{64}{2x^2}} = \int_2^6\roundbrac{
+		2x^2-16-\frac{32}{x^2}}dx = 2x^3\Bigr|_2^6 - 16x\Bigr|_2^6 + \frac{32}{x}\Bigr|_2^6 =\\
+	= \frac{1024}{3} \approx 341.(3)
+\end{multline}

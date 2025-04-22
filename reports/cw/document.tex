@@ -22,6 +22,9 @@
 \usepackage{xecyr}
 \usepackage{minted}
 \usepackage{multirow}
+\usepackage{graphicx}
+\graphicspath{{./graphics/}}
+\usepackage{subcaption}
 \usemintedstyle{pastie}
 \setminted{fontsize=\small, linenos, breaklines}
 \input{hyphenat.tex}
@@ -42,6 +45,11 @@
 \pagestyle{mainPS}
 
 \newcommand{\iftxt}{\text{если}}
+\newcommand{\aftint}[1]
+  {\left. #1 \right|}
+
+\newcommand{\roundbrac}[1]
+  {\left(#1\right)}
 
 \newtheorem*{remark}{Примечание}
 
@@ -54,6 +62,5 @@
 \include{header}
 \include{content/task}
 \include{content/listing}
-\include{content/results}
 \end{document}
 

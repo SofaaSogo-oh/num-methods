@@ -86,6 +86,14 @@
 (target-y *X-SPLIT1*)
 (target-y *X-SPLIT2*)
 
+(defun y0-for-cmp (nde y1)
+  (let ((h (nde-h nde)))
+    (/ (- (* 2 h)
+          y1)
+       (- (* 2 h)
+          1))))
+          
+
 (defun main (nde)
   (let* ((n (nde-n nde))
          (table (ascii-table:make-table 
@@ -97,6 +105,8 @@
          (i (loop for i from 0 to n collect i))
          (xi (mapcar (compose frmt (curry #'nde-i nde)) i))
          (yi (target-y nde))
+         (y0-1 (car yi))
+         (y0-2 (y0-for-cmp nde (cadr yi)))
          (mi (mapcar (curry #'m_i nde) i))
          (ri (mapcar (curry #'r_i nde) i))
          (phii (mapcar (curry #'phi_i nde) i))
@@ -108,7 +118,9 @@
              #'list) 
             xi yi mi ri phii ci di) 
     (ascii-table:add-row table (list (car (last xi)) (car (last yi)) nil nil nil nil nil))
-    (ascii-table:display table)))
+    (ascii-table:display table)
+    (format t "y₀ = ~a, Y₀ = ~a, |y₀ - Y₀| = ~a~%"
+            y0-1 y0-2 (abs (- y0-1 y0-2)))))
 
 (main *x-split1*)
 (main *X-SPLIT2*)

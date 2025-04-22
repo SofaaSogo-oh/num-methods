@@ -87,19 +87,30 @@
 
 (defun display-sigma-points (alist f &key (stream t))
   (when stream
-    (format stream "Points total: ~a~%" (length alist))
     (format stream "~{~a~%~}"
             (mapcar (lambda (x)
                       (format nil "~a ↦ ~a"
                         x (apply f x)))
                     alist)))) 
 
-(defun calc-integral (n indicator splits f &key (stream nil))
+(let ((points (get-sigma-points 20 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*))))
+  (display-sigma-points points #'reduced-changed-int)
+  (/ (reduce #'+ (mapcar (curry #'apply #'reduced-changed-int) points)) 20))
+
+(display-sigma-points 
+ (get-sigma-points 20 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*))
+ #'reduced-changed-int)
+ 
+
+(get-sigma-points 20 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*))
+
+(length (get-sigma-points 1000 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*)))
+
+(defun calc-integral (n indicator splits f)
   (let ((points (get-sigma-points n indicator splits)))
-    (display-sigma-points points f :stream stream)
     (/ (reduce #'+
                (mapcar (curry #'apply f) points)) 
-       n))C)
+       n)))
 
 (defun main (samples points)
   (loop for i from 1 to samples collect 
@@ -123,8 +134,6 @@
     (list (- mean-v dlta) (+ mean-v dlta))))
   
 
-(display-list (collect-frequency (main 100 60) 8))
-
-(calc-integral 60 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int :stream t)
+(display-list (collect-frequency (main 100 20 ) 8))
 
 (calc-confidence-mean (main 20 30) 0.05)

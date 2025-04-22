@@ -123,8 +123,7 @@
     (list (- mean-v dlta) (+ mean-v dlta))))
   
 
-(display-list (collect-frequency (main 100 60) 8))
-
+(display-list (collect-frequency (main 100 100) 8))
 (calc-integral 60 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int :stream t)
 
 (calc-confidence-mean (main 20 30) 0.05)
