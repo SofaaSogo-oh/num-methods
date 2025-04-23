@@ -101,6 +101,29 @@
                (mapcar (curry #'apply f) points)) 
        n))C)
 
+(defun calc2-integral (n indicator splits f &key (stream nil) (maxv 1024))
+  (let* 
+      ((points (get-freq-mrx n (1+ (length splits))))
+       (flterd (remove-if-not 
+                (lambda (x) 
+                  (let ((f-x (car x))
+                        (v-x (cdr x)))
+                    (and (apply indicator v-x)
+                      (< f-x (/ (apply f v-x) maxv)))))
+                points)))
+    (format stream "~{~a~%~}" 
+            (mapcar
+              (lambda (x)
+                (format nil "~a ~a ~a" 
+                        (car x)
+                        (cdr x)
+                        (/ (apply f (cdr x)) maxv)))
+              flterd))
+    (* maxv (/ (length flterd) n))))
+
+(float (calc2-integral 20 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int :stream t))
+       
+
 (defun main (samples points)
   (loop for i from 1 to samples collect 
         (calc-integral points #'sigma-indicator 
@@ -128,3 +151,4 @@
 (calc-integral 60 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int :stream t)
 
 (calc-confidence-mean (main 20 30) 0.05)
+
