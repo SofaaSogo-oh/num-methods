@@ -89,7 +89,7 @@
                             (dy (abs (- y yhh))))
                        (disp xhh (funcall trg-y xhh) yhh ym dym dy))
                      (if (< dym eps)
-                         (lp xhh ym h clc (cons yh y_k) (cons xh x_k))
+                         (lp xhh yhh h clc (cons yh y_k) (cons xh x_k))
                          (lp x y (/ h 2) (1+ clc) y_k x_k))))))
       (when display (disp a (funcall trg-y a)(funcall trg-y a)  nil nil 0))
       (let ((res (lp a y0 h0 0 nil nil)))
@@ -190,7 +190,8 @@
 (defun main nil
   (table-for-partion *PART10* *Y_0*)
   (table-for-partion *PART20* *Y_0*)
-  (disp-based-nde-1-step-rk4 #'dy/dx *PART10* 1))
+  (disp-based-nde-1-step-rk4 #'dy/dx *PART10* 1)
+  (disp-based-nde-1-step-rk4 #'dy/dx *PART20* 1))
   
 
 (main)
