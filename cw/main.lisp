@@ -90,7 +90,7 @@
     (format stream "Points total: ~a~%" (length alist))
     (format stream "~{~a~%~}"
             (mapcar (lambda (x)
-                      (format nil "~a ↦ ~a"
+                      (format nil "~a -> ~a"
                         x (apply f x)))
                     alist)))) 
 
@@ -99,7 +99,7 @@
     (display-sigma-points points f :stream stream)
     (/ (reduce #'+
                (mapcar (curry #'apply f) points)) 
-       n))C)
+       n)))
 
 (defun calc2-integral (n indicator splits f &key (stream nil) (maxv 1024))
   (let* 
@@ -124,11 +124,17 @@
 (float (calc2-integral 20 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int :stream t))
        
 
-(defun main (samples points)
-  (loop for i from 1 to samples collect 
-        (calc-integral points #'sigma-indicator 
+(defun calc-1 (points)
+ (calc-integral points #'sigma-indicator 
                       (list *X-SPLIT* *Y-SPLIT*)
-                      #'reduced-changed-int)))
+                      #'reduced-changed-int))
+
+(defun calc-2 (points)
+  (calc2-integral points #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int))
+
+(defun main (samples points &key (func #'calc-1))
+  (loop for i from 1 to samples collect 
+        (funcall func points)))
 
 (defun calc-confidence-mean (alist eps)
   (let* ((n (length alist))
@@ -148,7 +154,61 @@
 
 (display-list (collect-frequency (main 100 60) 8))
 
-(calc-integral 60 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int :stream t)
+(calc-integral 20 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int :stream t)
 
-(calc-confidence-mean (main 20 30) 0.05)
+
+(main 20 30)
+
+(defun calc-mean (alist)
+  (/ (reduce #'+ alist) 
+     (length alist)))
+
+(defun calc-disp (alist) 
+  (let ((mean (calc-mean alist)))
+    (/ (reduce 
+         #'+ 
+         (mapcar 
+          (lambda (x) 
+            (* (- x mean) (- x mean)))
+          alist))
+       (length alist))))
+
+(defun calc-normal-d (alist)
+  (sqrt (calc-disp alist)))
+
+(defun alist-info (alist &key (stream t))
+  (format 
+    stream 
+    "Mean: ~a~%Disp: ~a~%Sigma: ~a~%" 
+    (calc-mean alist) 
+    (calc-disp alist)
+    (calc-normal-d alist)))
+
+(defun alist-normal-d (ssamples samples points &key (func #'calc-1))
+  (loop for i from 0 to ssamples collect (main samples points :func func)))
+
+(alist-info (main 100 20))
+(alist-info (main 100 50))
+(alist-info (main 100 100))
+(alist-info (main 100 200))
+(alist-info (main 100 300))
+
+(defun print-table (func)
+  (let ((table (ascii-table:make-table '("N" "mₓ" "dₓ"))))
+    (mapcar 
+      (lambda (n) 
+        (ascii-table:add-row table 
+         (let* ((normal-d (mapcar #'calc-normal-d (alist-normal-d 30 100 n :func func)))
+                (mean-normal-d (calc-mean normal-d))
+                (normal-normal-d (calc-normal-d normal-d)))
+             (list 
+               n 
+               mean-normal-d 
+               normal-normal-d))))
+      '(20 50 100 200 300 400 500))
+    (ascii-table:display table)
+    nil))
+
+(print-table #'calc-1)
+(print-table #'calc-2)
 

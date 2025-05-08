@@ -1,0 +1,56 @@
+\section{Исключение одной случайной величины}
+Если взять уже пространство с
+\begin{enumerate}
+	\item \(\Omega = [0,1]^2 \subset R^2\);
+	\item \(F\) то же;
+	\item \(P\) то же
+\end{enumerate}
+
+И рассмотреть случайную велчину вида
+\begin{align}
+	Y = I_{D'}(X)f(X)
+\end{align}
+
+То получается:
+\begin{align}
+	M[Y] = \iint_{[0,1]^2} p(X) I(X) f(X) dX
+\end{align}
+При том выходит, из определения индикатора:
+\begin{align}
+	M[Y] = \iint_{D'} p(X)f(X) dX
+\end{align}
+А учитывая равномерное распределение, выходит, что
+\begin{align}
+	p(x) = \frac{1}{A} = 1
+\end{align}
+И тогда
+\begin{align}
+	M[Y] = \iint_{D'} f(X) dX = I_0
+\end{align}
+Дисперсия вычисляется как
+\begin{align}
+	D[Y] = \mu_2[Y] = \alpha_2[Y] - (\alpha_1[Y])^2 = M[Y^2] - (M[Y])^2 \\
+	M[Y^2] = \iint_{[0, 1]^2} p(X)(I_{D'}(X)f(X))^2 dX = \iint_{D'}f^2(X) dX
+\end{align}
+И это выходит конечное число.
+
+И если взять другую случайную величину как сумму данных независимых величин:
+\begin{align}
+	S = \frac{1}{n}\sum_{k=0}^n Y
+\end{align}
+Вычисляя основные величины:
+\begin{align}
+	M[S] = \frac{n}{n}I_0 = I_0 \\
+	D[S] = \frac{n}{n^2} D[Y] = \frac{1}{n} D[y]
+\end{align}
+
+И в итоге записывая неравенство Чебышева:
+\begin{align}
+	P\{|S - I_0|<\varepsilon\} \geq 1 - \frac{\iint_{D'}f^2(X)dX - I_0^2}{\varepsilon^2 n} \\
+\end{align}
+
+В итоге выходит, что
+\begin{align}
+	\lim_{n\to\infty}P\{|S - I_0|<\varepsilon\} = 1
+\end{align}
+И асимптотически величина \(\varepsilon\) описывается так же, как и в \cref{eq:o-desc}.

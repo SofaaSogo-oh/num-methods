@@ -60,7 +60,7 @@
       (lp 0 (list y_0)))))
 
 (defparameter *rk-tmp-h-hh* 
-  '("xₖ" "yₖ" "yₕ" "yₘ" "Δyₕ" "Δyₖ"))
+  '("xₖ" "yₖ" "yₕ" "yₘ" "Δyₕ" "Δyₖ" "h"))
 
 (defun rkt4 (f nde y0 eps &key (display t) (trg-y #'target-y))
   (let* ((h0 (nde-h nde))
@@ -84,14 +84,14 @@
                           (dym (abs (- yhh ym))))
                      (let* ((y (funcall trg-y xh))
                             (dy (abs (- y yh))))
-                       (disp xh y yh nil nil dy))
+                       (disp xh y yh nil nil dy h))
                      (let* ((y (funcall trg-y xhh))
                             (dy (abs (- y yhh))))
-                       (disp xhh (funcall trg-y xhh) yhh ym dym dy))
+                       (disp xhh (funcall trg-y xhh) yhh ym dym dy h))
                      (if (< dym eps)
                          (lp xhh yhh h clc (cons yh y_k) (cons xh x_k))
                          (lp x y (/ h 2) (1+ clc) y_k x_k))))))
-      (when display (disp a (funcall trg-y a)(funcall trg-y a)  nil nil 0))
+      (when display (disp a (funcall trg-y a)(funcall trg-y a)  nil nil 0 h0))
       (let ((res (lp a y0 h0 0 nil nil)))
         (when display (ascii-table:display table))
         res))))
