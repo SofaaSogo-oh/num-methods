@@ -94,6 +94,15 @@
                         x (apply f x)))
                     alist)))) 
 
+(defun special-print (alist indicator f &key (stream nil))
+  (format stream "~{~a~%~}"
+          (mapcar (lambda (x)
+                    (if (null (apply indicator x))
+                        (format nil "~a \\not\\in D" x)
+                        (format nil "~a \\to ~a" x (apply f x))))
+                  alist)))
+(special-print (get-freq-mrx 20 2) #'sigma-indicator #'reduced-changed-int :stream t)
+
 (defun calc-integral (n indicator splits f &key (stream nil))
   (let ((points (get-sigma-points n indicator splits)))
     (display-sigma-points points f :stream stream)
