@@ -95,20 +95,39 @@
                     alist)))) 
 
 (defun special-print (alist indicator f &key (stream nil))
-  (format stream "~{~a~%~}"
-          (mapcar (lambda (x)
-                    (if (null (apply indicator x))
-                        (format nil "~a \\not\\in D" x)
-                        (format nil "~a \\to ~a" x (apply f x))))
-                  alist)))
+  (progn
+    (format stream "~{~a~%~}"
+            (mapcar (lambda (x)
+                      (if (null (apply indicator x))
+                          (format nil "~a \\not\\in D \\\\" x)
+                          (format nil "~a \\to ~a \\\\" x (apply f x))))
+                    alist))
+    (let* ((n (length alist))
+           (sublist 
+            (remove-if
+             #'null
+              (mapcar (lambda (x) 
+                        (if (null (apply indicator x))
+                            nil
+                            (apply f x))) alist)))
+           (res (/ (reduce #'+ sublist) n))
+           (n_ (length sublist)))
+      (format stream "I = \\frac{1}{~a}\\sum_{k=0}^{~a} =\\frac{1}{~a}(~a) = ~a"
+              n n_ n
+              (format nil "~{~a~^+~}" sublist)
+              res))))
+
 (special-print (get-freq-mrx 20 2) #'sigma-indicator #'reduced-changed-int :stream t)
+
+(defun calc-integral-body (points f &key (stream nil))
+  (display-sigma-points points f :stream stream)
+  (/ (reduce #'+
+             (mapcar (curry #'apply f) points))))
 
 (defun calc-integral (n indicator splits f &key (stream nil))
   (let ((points (get-sigma-points n indicator splits)))
-    (display-sigma-points points f :stream stream)
-    (/ (reduce #'+
-               (mapcar (curry #'apply f) points)) 
-       n)))
+    (calc-integral-body points f :stream stream)))
+
 
 (defun calc2-integral (n indicator splits f &key (stream nil) (maxv 1024))
   (let* 
