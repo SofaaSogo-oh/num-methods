@@ -6,9 +6,9 @@
 namespace cnst {
 constexpr double gamma = -1.7, m = -1.7, alpha = -.5, beta = .4, M = .1,
                  N = -.5;
-constexpr size_t I = 10, J = 50;
+constexpr size_t I = 11, J = 10;
 constexpr double l = 1.;
-constexpr double h = l / I, k = h;
+constexpr double h = l / J, k = h;
 } // namespace cnst
 //
 
@@ -50,18 +50,16 @@ auto &&psi = [](double t) -> double {
 
 using arr_t = std::array<std::array<double, cnst::J>, cnst::I + 1>;
 
-auto print_table(const double k, const arr_t &u) {
-  return ostream_invoker{[&u, k](std::ostream &os) -> std::ostream & {
+auto print_table(const arr_t &u) {
+  return ostream_invoker{[&u](std::ostream &os) -> std::ostream & {
     os << table_hard_line << table_header << table_line;
-    size_t J = 1. / k;
     for (size_t j = 0; j < cnst::J; ++j) {
-      os << cell_wrapper("t = " + std::to_string(j * k));
-      for (size_t i = 0; i <= cnst::I; ++i)
+      os << cell_wrapper("t = " + std::to_string(j * cnst::k));
+      for (size_t i = 0; i < cnst::I; ++i)
         os << cell_wrapper(u[i][j]);
       os << "|" << std::endl;
     }
     os << table_hard_line;
-    std::cout << J << std::endl;
     return os;
   }};
 }
@@ -110,14 +108,12 @@ arr_t implicit_method(double S) {
   return u;
 }
 
-#if 1
 int main() {
-  std::cout << print_table(cnst::h * cnst::h / 6., explicit_method());
+  std::cout << print_table(explicit_method());
   for (auto &&S :
        std::views::istream<double>(std::cin) |
            std::ranges::views::filter([](auto &&x) { return x > 0.; }) |
            std::views::take(3))
-    std::cout << print_table(cnst::h * cnst::h / S, implicit_method(S));
+    std::cout << print_table(implicit_method(S));
   return 0;
 }
-#endif

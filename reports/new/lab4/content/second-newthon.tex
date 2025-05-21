@@ -1,0 +1,24 @@
+\subsection{\RomanNum{2} Интерполяционная формула Ньютона}
+\subsubsection{Теоретический вывод}
+
+Аналогично приведенным рассуждениям:
+\begin{align}
+	\lambda_{kt} - \lambda_{(k-1)t} = t \frac{(k - 1)!}{(k-t))!} = t \frac{(k-1)!}{((k-1)-(t-1))!} = t \lambda_{(k-1)(t-1)}
+\end{align}
+Здесь из нынешней строки вычитается предыдущая --- порядок вычетов тоже отличается:
+\begin{align}
+	\begin{pmatrix}
+		1      & 0      & 0      & \cdots & 0      \\
+		0      & h      & 0      & \cdots & 0      \\
+		0      & 0      & 2 h^2  & \cdots & 0      \\
+		\vdots & \vdots & \vdots & \ddots & \vdots \\
+		0      & 0      & 0      & \cdots & n! h^n \\
+	\end{pmatrix}
+	\begin{pmatrix}
+		a_0    \\
+		a_1    \\
+		a_2    \\
+		\vdots \\
+		a_n    \\
+	\end{pmatrix} =
+\end{align}

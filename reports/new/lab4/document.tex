@@ -1,0 +1,57 @@
+% !TEX program = xelatex
+\documentclass[12pt]{article}
+
+\usepackage[pagestyles]{titlesec}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{amssymb}
+
+\usepackage{hyperref}
+\hypersetup{
+  colorlinks=true,
+  linkcolor=blue,
+  filecolor=magenta,
+}
+\usepackage[russian]{cleveref}
+\usepackage{mathtools}
+
+\usepackage{mathspec}
+\usepackage{fontspec}
+\usepackage{xunicode}
+\usepackage{xltxtra}
+\usepackage{xecyr}
+\usepackage{minted}
+\usepackage{multirow}
+\usemintedstyle{pastie}
+\setminted{fontsize=\small, linenos, breaklines}
+\input{hyphenat.tex}
+
+\usepackage[left=3cm, right=1.5cm, vmargin=1.99cm]{geometry}
+
+\setromanfont{Times New Roman}
+\setsansfont{Liberation Sans}
+\setmonofont{3270 Nerd Font}
+\setmathfont{Latin Modern Roman}
+
+\newcommand{\ulwt}[3]{\underline{\hspace*{#1}#2\hspace{#3}}}
+
+\newpagestyle{mainPS}{
+  \setfoot{}{}{\thepage}
+}
+
+\pagestyle{mainPS}
+
+\newcommand{\iftxt}{\text{если}}
+
+\newtheorem*{remark}{Примечание}
+
+\newcommand{\RomanNum}[1]
+  {\MakeUppercase{\romannumeral #1}}
+
+\DeclareMathOperator{\diag}{diag}
+
+\begin{document}
+\include{header}
+\include{content/task}
+\end{document}
+
