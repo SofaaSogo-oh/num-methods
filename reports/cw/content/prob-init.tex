@@ -1,24 +1,24 @@
-\subsection{Введение вероятностной модели}
+\subsection{Введение вероятностной модели}\label{method-1}
 При условии, что \(f\circ\varphi\) неотрицательно на области \(D'\), данное тождество истинно:
 \begin{align}
-	f(\varphi(t)) = \int_0^{f(\varphi(t))}dr
+	f(\varphi(t)) = \int_0^{f(\varphi(t))}dr.
 \end{align}
 Допустив
 \begin{align}
-	0 \leq f(\varphi(t)) \leq R \Longrightarrow 0 \leq \frac{f(\varphi(t))}{R} \leq 1, \forall t \in D'
+	0 \leq f(\varphi(t)) \leq R \Longrightarrow 0 \leq \frac{f(\varphi(t))}{R} \leq 1, \forall t \in D',
 \end{align}
-Можно сделать замену
+можно сделать замену
 \begin{align}
 	u = r R \Longrightarrow du = R dr \\
-	r_a = 0, r_b = f(\varphi(t))/R
+	r_a = 0, r_b = f(\varphi(t))/R.
 \end{align}
 Интеграл \cref{eq:ab-iint} принимает вид:
 \begin{align}
-	I = (A - a)(B - b)R\iint\limits_{D'}\int_0^{f(\varphi(t))/R}drdt = (A - a)(B - b)R \iiint\limits_{D''}d\xi
+	I = (A - a)(B - b)R\iint\limits_{D'}\int_0^{f(\varphi(t))/R}drdt = (A - a)(B - b)R \iiint\limits_{D''}d\xi,
 \end{align}
-Где \(D'' \subset [0,1]^3\) находится над гиперплоскостью \(z = 0\) и под гиперповерхностью \(z =f(\varphi(t))\)
+где \(D'' \subset [0,1]^3\) находится над гиперплоскостью \(z = 0\) и под гиперповерхностью \(z =f(\varphi(t))\)
 
-Для вероятностного пространства \((\Omega, F, P)\), заданного следуюущим образом:
+Для вероятностного пространства \((\Omega, F, P)\):
 \begin{enumerate}
 	\item \(\Omega = [0,1]^3 \subset \mathbb{R}^3\) --- множество элементарных событий;
 	\item \(F\) --- \(\sigma\) алгебра подмножеств множества \(\Omega\), для которых введена мера \(\mu\);
@@ -42,18 +42,18 @@
 \end{align}
 Задав случайную величину \(S_n\):
 \begin{align}
-	p^* = \frac{1}{n}\sum_{i=0}^n P(I_{D''}(X_i) = 1) = S_n
+	p^* = \frac{1}{n}\sum_{i=0}^n P(I_{D''}(X_i) = 1) = S_n,
 \end{align}
-Выходит:
+выходит:
 \begin{align}
 	M[S_n] = \frac{1}{n}M[\sum_{i=0}^n P(I_{D''}(X_i) = 1)] = \frac{1}{n}\sum_{i=0}^n M[P(I_{D''}(X_i) = 1)] = \frac{1}{n}\sum_{i=0}^n I_0 = \frac{n}{n}I_0 = I_0 \\
 	D[S_n] = \frac{1}{n^2}D[\sum_{i=0}^n P(I_{D''}(X_i) = 1)] =  \frac{1}{n^2}\sum_{i=0}^n I_0(1-I_0) = \frac{(1 - I_0)I_0}{n} < \frac{1}{4n}
 \end{align}
-И неравенство Чебышева:
+И неравенство Чебышева
 \begin{align}
 	P\{|X-m_x|<\varepsilon\} \geq 1 - \frac{D_x}{\varepsilon^2}
 \end{align}
-Принимает вид:
+принимает вид:
 \begin{align}
 	P\{|p^* - p|<\varepsilon\} \geq 1 - \frac{I_0(1-I_0)}{\varepsilon^2 n} \geq 1 - \frac{1}{4 \varepsilon^2 n} \\
 	\label{eq:garant}
@@ -61,11 +61,11 @@
 \end{align}
 Приняв для данной оценки \(\varepsilon\) гарантийную вероятность \cref{eq:garant}, выводится, что условие имеет место быть при
 \begin{align}
-	\frac{1}{4 \varepsilon^2 n} = \delta \Longrightarrow \varepsilon = \frac{1}{2\sqrt{\delta n}}
+	\frac{1}{4 \varepsilon^2 n} = \delta \Longrightarrow \varepsilon = \frac{1}{2\sqrt{\delta n}}.
 \end{align}
 Итак, поведение величины \(\varepsilon\) описывается
 \begin{align}\label{eq:o-desc}
-	\varepsilon = O(\frac{1}{\sqrt{n}})
+	\varepsilon = O\left(\frac{1}{\sqrt{n}}\right).
 \end{align}
 И необходимое число испытаний тогда:
 \begin{align}

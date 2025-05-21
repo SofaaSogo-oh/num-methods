@@ -112,22 +112,22 @@
                             (apply f x))) alist)))
            (res (/ (reduce #'+ sublist) n))
            (n_ (length sublist)))
-      (format stream "I = \\frac{1}{~a}\\sum_{k=0}^{~a} =\\frac{1}{~a}(~a) = ~a"
+      (format stream "I = \\frac{1}{~a}\\sum_{k=0}^{~a} =\\frac{1}{~a}(~a) = ~a~%"
               n n_ n
               (format nil "~{~a~^+~}" sublist)
               res))))
 
 (special-print (get-freq-mrx 20 2) #'sigma-indicator #'reduced-changed-int :stream t)
 
-(defun calc-integral-body (points f &key (stream nil))
+(defun calc-integral-body (n points f &key (stream nil))
   (display-sigma-points points f :stream stream)
   (/ (reduce #'+
-             (mapcar (curry #'apply f) points))))
+             (mapcar (curry #'apply f) points))
+     n))
 
 (defun calc-integral (n indicator splits f &key (stream nil))
   (let ((points (get-sigma-points n indicator splits)))
-    (calc-integral-body points f :stream stream)))
-
+    (calc-integral-body n points f :stream stream)))
 
 (defun calc2-integral (n indicator splits f &key (stream nil) (maxv 1024))
   (let* 
@@ -150,6 +150,8 @@
     (* maxv (/ (length flterd) n))))
 
 (float (calc2-integral 20 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int :stream t))
+
+(float (calc-integral 20 #'sigma-indicator (list *X-SPLIT* *Y-SPLIT*) #'reduced-changed-int :stream t))
        
 
 (defun calc-1 (points)
@@ -199,27 +201,36 @@
           (lambda (x) 
             (* (- x mean) (- x mean)))
           alist))
-       (length alist))))
+       (1- (length alist)))))
 
 (defun calc-normal-d (alist)
   (sqrt (calc-disp alist)))
 
 (defun alist-info (alist &key (stream t))
-  (format 
-    stream 
-    "Mean: ~a~%Disp: ~a~%Sigma: ~a~%" 
-    (calc-mean alist) 
-    (calc-disp alist)
-    (calc-normal-d alist)))
+  (format stream "$m_x$ & $D_x$ & $\\sigma_x$ & $|m_x - I|$ \\\\~%")
+  (format stream "$~a$ & $~a$ & $~a$ & $~a$ \\\\~%"
+          (float (calc-mean alist))
+          (float (calc-disp alist))
+          (calc-normal-d alist)
+          (float (abs (- *TARGET-INT-VALUE* (calc-mean alist))))))
+  
 
 (defun alist-normal-d (ssamples samples points &key (func #'calc-1))
   (loop for i from 0 to ssamples collect (main samples points :func func)))
+
+(main 100 20 :func #'calc-2)
 
 (alist-info (main 100 20))
 (alist-info (main 100 50))
 (alist-info (main 100 100))
 (alist-info (main 100 200))
 (alist-info (main 100 300))
+
+(alist-info (main 100 20 :func #'calc-2))
+(alist-info (main 100 50 :func #'calc-2))
+(alist-info (main 100 100 :func #'alc-2))
+(alist-info (main 100 200 :func #'calc-2))
+(alist-info (main 100 300 :func #'calc-2))
 
 (defun print-table (func)
   (let ((table (ascii-table:make-table '("N" "mₓ" "dₓ"))))
